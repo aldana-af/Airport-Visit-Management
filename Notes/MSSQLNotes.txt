@@ -1,0 +1,22 @@
+MS SQL Database
+
+Commands
+
+CREATE TABEL Test (
+id Int IDENTITY(1,1) PRIMARY KEY  //IDENTITY(1,1) auto-increments id
+name VARCHAR(50)
+);
+
+INSERT INTO Test(name)
+VALUES('Dana'),
+	('Omar');
+
+ALTER TABLE Test
+ADD email VARCHAR(255);
+
+UPDATE Test
+SET name = 'Layan'
+WHERE id = 2;
+
+DELETE FROM Test
+WHERE id = 3;
