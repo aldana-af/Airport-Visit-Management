@@ -3,7 +3,7 @@ MS SQL Database
 Commands
 
 CREATE TABEL Test (
-id Int IDENTITY(1,1) PRIMARY KEY  //IDENTITY(1,1) auto-increments id
+id Int IDENTITY(1,1) PRIMARY KEY,  //IDENTITY(1,1) auto-increments id
 name VARCHAR(50)
 );
 
@@ -20,3 +20,13 @@ WHERE id = 2;
 
 DELETE FROM Test
 WHERE id = 3;
+
+// using CHECK Constraint to set specific text options for a column in table
+   ex:
+CREATE TABLE Employees (
+    EmployeeID INT PRIMARY KEY,
+    EmployeeName VARCHAR(50),
+    JobStatus VARCHAR(20) NOT NULL,
+    -- Enforces that ONLY these two exact strings can be inserted
+    CONSTRAINT CHK_JobStatus CHECK (JobStatus IN ('Full-Time', 'Part-Time'))
+);
