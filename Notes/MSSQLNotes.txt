@@ -21,7 +21,8 @@ WHERE id = 2;
 DELETE FROM Test
 WHERE id = 3;
 
-// using CHECK Constraint to set specific text options for a column in table
+-------------Check constraints----------------------------------------------
+//using CHECK Constraint to set specific text options for a column in table
    ex:
 CREATE TABLE Employees (
     EmployeeID INT PRIMARY KEY,
@@ -30,3 +31,128 @@ CREATE TABLE Employees (
     -- Enforces that ONLY these two exact strings can be inserted
     CONSTRAINT CHK_JobStatus CHECK (JobStatus IN ('Full-Time', 'Part-Time'))
 );
+
+---------------foreign key------------------------------------------------
+CREATE TABLE SiteVisitingManager(
+	ManagerID INT PRIMARY KEY,
+	Name VARCHAR(100) NOT NULL,
+	Phone VARCHAR(15) NOT NULL,
+	Email VARCHAR(100) NOT NULL,
+	ManagerLoginID INT NOT NULL,
+	CONSTRAINT FK_LoginID FOREIGN KEY (ManagerLoginID) REFERENCES Logins(LoginID)
+);
+
+------------rename table----------------------------------------------
+EXEC sp_rename 'old-name', 'new-name';
+
+------------delete / drop procedure----------------------------------------
+DROP PROCEDURE procedure_name;
+GO
+
+--------------create procedure--------------------------------------------
+CREATE PROCEDURE Add_New_EmployeeHost
+	@EmployeeID INT,
+	@Name VARCHAR(100),
+	@InputDepartmentID INT,
+	@Phone VARCHAR(15),
+	@Email VARCHAR(100),
+	@Role VARCHAR(50),
+	@InputUsername VARCHAR(50)
+AS
+BEGIN
+	IF NOT EXISTS (SELECT 1 FROM Logins WHERE Username = @InputUsername)
+	BEGIN
+		RAISERROR('Username does not exist in Logins table.', 16, 1);
+		RETURN;
+	END
+	INSERT INTO EmployeeHost(EmployeeID, Name, DepartmentID, Phone, Email, Role, LoginID)
+	VALUES(@EmployeeID, @Name, (SELECT DepartmentID FROM Department WHERE DepartmentID = @InputDepartmentID), 
+	@Phone, @Email, @Role, (SELECT LoginID FROM Logins WHERE Username = @InputUsername));
+END;
+GO
+
+---------------execute procedure------------------------------------------
+EXEC Add_New_EmployeeHost
+	@EmployeeID = 2001,
+	@Name = 'Layan Felemban',
+	@InputDepartmentID = 1,
+	@Phone = '0501234567',
+	@Email = 'layanf@airline.com',
+	@Role = 'HR Manager',
+	@InputUsername = 'layanf';
+
+------------------optimized procedure-----------------------------------
+// 1st version scans Logins table 3 times
+CREATE PROCEDURE Add_New_EmployeeHost
+	@EmployeeID INT,
+	@Name VARCHAR(100),
+	@InputDepartmentID INT,
+	@Phone VARCHAR(15),
+	@Email VARCHAR(100),
+	@Role VARCHAR(50),
+	@InputUsername VARCHAR(50)
+AS
+BEGIN
+	SET NOCOUNT ON; -- Keeps the procedure fast
+
+	-- 1. Declare a variable to store the found ID
+	DECLARE @FoundLoginID INT;
+
+	-- 2. Try to fetch the ID once
+	SELECT @FoundLoginID = LoginID 
+	FROM Logins 
+	WHERE Username = @InputUsername;
+
+	-- 3. If it wasn't found, stop and error out
+	IF @FoundLoginID IS NULL
+	BEGIN
+		RAISERROR('Username does not exist in Logins table.', 16, 1);
+		RETURN;
+	END
+
+	-- 4. Insert cleanly using direct variables
+	INSERT INTO EmployeeHost(EmployeeID, Name, DepartmentID, Phone, Email, Role, LoginID)
+	VALUES(@EmployeeID, @Name, @InputDepartmentID, @Phone, @Email, @Role, @FoundLoginID);
+END;
+GO
+
+------------create procedure Add_New_SiteVisitingManager---------------------
+// with variable declaration to optimize table scanning
+// variable for to check for already exisiting manager
+// variable to check if login info exits in Logins table
+
+CREATE PROCEDURE Add_New_SiteVisitingManager
+	@ManagerID INT,
+	@Name VARCHAR(100),
+	@Phone VARCHAR(15),
+	@Email VARCHAR(100),
+	@InputUsername NVARCHAR(50)
+AS
+BEGIN
+	-- Delcare variables for error handling
+	DECLARE @FoundManagerID INT;
+	DECLARE @FoundLoginID INT;
+
+	-- Fecth the ManagerID and LoginID from the respective tables
+	SELECT @FoundManagerID = ManagerID FROM SiteVisitingManager WHERE ManagerID = @ManagerID;
+	SELECT @FoundLoginID = LoginID FROM Logins WHERE Username = @InputUsername;
+
+	-- Check if the manager already exists
+	IF @FoundManagerID IS NOT NULL
+		BEGIN
+			RAISERROR('Manager with ID %d already exists.', 16, 1, @ManagerID);
+			RETURN;
+		END
+
+	-- Check if the input username exists in the Logins table
+	IF @FoundLoginID IS NULL
+		BEGIN
+			RAISERROR('Input username %s does not exist in Logins table.', 16, 1, @InputUsername);
+			RETURN;
+		END
+
+	-- Insert new manager into the SiteVisitingManager table
+	INSERT INTO SiteVisitingManager (ManagerID, Name, Phone, Email, ManagerLoginID)
+	VALUES (@ManagerID, @Name, @Phone, @Email, @FoundLoginID);
+END;
+GO

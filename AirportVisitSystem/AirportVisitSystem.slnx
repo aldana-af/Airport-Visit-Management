@@ -1,3 +1,7 @@
 <Solution>
   <Project Path="AirportVisitSystem.csproj" />
+  <Project Path="Database/AirportVisitDatabase1/AirportVisitDatabase1.sqlproj" Id="f486b527-291a-4b52-800b-51c2b35f4d52">
+    <Build />
+    <Deploy />
+  </Project>
 </Solution>
