@@ -1,0 +1,90 @@
+8/9/2026 11:39:55 PM	This log contains information about the import schema operation into project 'AirportVisitDatabase2' on computer 'DESKTOP-N09U3JI' by user 'omarn'.
+8/9/2026 11:39:56 PM	Import of database schema has started.
+8/9/2026 11:40:07 PM	Gathering database credentials
+8/9/2026 11:40:07 PM	Gathering database options
+8/9/2026 11:40:07 PM	Gathering generic database scoped configuration option
+8/9/2026 11:40:07 PM	Gathering users
+8/9/2026 11:40:07 PM	Gathering roles
+8/9/2026 11:40:07 PM	Gathering application roles
+8/9/2026 11:40:07 PM	Gathering role memberships
+8/9/2026 11:40:07 PM	Gathering filegroups
+8/9/2026 11:40:07 PM	Gathering full-text catalogs
+8/9/2026 11:40:07 PM	Gathering assemblies
+8/9/2026 11:40:07 PM	Gathering certificates
+8/9/2026 11:40:07 PM	Gathering asymmetric keys
+8/9/2026 11:40:07 PM	Gathering symmetric keys
+8/9/2026 11:40:07 PM	Gathering encrypted symmetric keys
+8/9/2026 11:40:07 PM	Gathering schemas
+8/9/2026 11:40:07 PM	Gathering XML schema collections
+8/9/2026 11:40:07 PM	Gathering user-defined data types
+8/9/2026 11:40:07 PM	Gathering user-defined types
+8/9/2026 11:40:07 PM	Gathering table types
+8/9/2026 11:40:07 PM	Gathering unique keys for table types
+8/9/2026 11:40:07 PM	Gathering primary keys for table types
+8/9/2026 11:40:07 PM	Gathering indexes for table types
+8/9/2026 11:40:08 PM	Gathering check constraints for table types
+8/9/2026 11:40:08 PM	Gathering default constraints for table types
+8/9/2026 11:40:08 PM	Gathering partition functions
+8/9/2026 11:40:08 PM	Gathering partition schemes
+8/9/2026 11:40:08 PM	Gathering functions
+8/9/2026 11:40:08 PM	Gathering encrypted functions
+8/9/2026 11:40:08 PM	Gathering aggregates
+8/9/2026 11:40:08 PM	Gathering procedures
+8/9/2026 11:40:08 PM	Gathering encrypted procedures
+8/9/2026 11:40:08 PM	Gathering tables
+8/9/2026 11:40:08 PM	Gathering primary keys
+8/9/2026 11:40:08 PM	Gathering unique constraints
+8/9/2026 11:40:08 PM	Gathering foreign keys
+8/9/2026 11:40:08 PM	Gathering default constraints
+8/9/2026 11:40:08 PM	Gathering check constraints
+8/9/2026 11:40:08 PM	Gathering views
+8/9/2026 11:40:08 PM	Gathering encrypted views
+8/9/2026 11:40:08 PM	Gathering indexes
+8/9/2026 11:40:08 PM	Gathering statistics
+8/9/2026 11:40:08 PM	Gathering full-text index stoplists
+8/9/2026 11:40:08 PM	Gathering search property lists
+8/9/2026 11:40:08 PM	Gathering search properties
+8/9/2026 11:40:08 PM	Gathering full-text indexes
+8/9/2026 11:40:08 PM	Gathering column store indexes
+8/9/2026 11:40:08 PM	Gathering spatial indexes
+8/9/2026 11:40:08 PM	Gathering XML indexes
+8/9/2026 11:40:08 PM	Gathering JSON indexes
+8/9/2026 11:40:08 PM	Gathering Selective XML indexes
+8/9/2026 11:40:08 PM	Gathering encrypted triggers
+8/9/2026 11:40:08 PM	Gathering triggers
+8/9/2026 11:40:08 PM	Gathering encrypted and clr ddl triggers
+8/9/2026 11:40:08 PM	Gathering ddl triggers
+8/9/2026 11:40:08 PM	Creating edge constraints
+8/9/2026 11:40:08 PM	Gathering synonyms
+8/9/2026 11:40:08 PM	Gathering defaults
+8/9/2026 11:40:08 PM	Gathering data constraint uddt bindings
+8/9/2026 11:40:08 PM	Gathering rules
+8/9/2026 11:40:08 PM	Gathering data constraint uddt bindings
+8/9/2026 11:40:08 PM	Gathering message types
+8/9/2026 11:40:08 PM	Gathering queues
+8/9/2026 11:40:08 PM	Gathering contracts
+8/9/2026 11:40:08 PM	Gathering services
+8/9/2026 11:40:08 PM	Gathering event notifications
+8/9/2026 11:40:08 PM	Gathering remote service bindings
+8/9/2026 11:40:08 PM	Gathering broker priorities
+8/9/2026 11:40:08 PM	Gathering signatures
+8/9/2026 11:40:08 PM	Gathering compression options
+8/9/2026 11:40:08 PM	Gathering sequence types
+8/9/2026 11:40:08 PM	Gathering security policies
+8/9/2026 11:40:08 PM	Gather column encryption keys
+8/9/2026 11:40:08 PM	Gathering column master keys
+8/9/2026 11:40:08 PM	Gathering external data sources
+8/9/2026 11:40:08 PM	Gathering external file formats
+8/9/2026 11:40:08 PM	Gathering external models
+8/9/2026 11:40:08 PM	Gathering external tables
+8/9/2026 11:40:08 PM	Gathering XML index compression options
+8/9/2026 11:40:08 PM	Gathering extended properties
+8/9/2026 11:40:08 PM	Gathering assemblies
+8/9/2026 11:40:08 PM	Gathering credentials
+8/9/2026 11:40:08 PM	Gathering logins
+8/9/2026 11:40:08 PM	Gathering server audits
+8/9/2026 11:40:09 PM	Scanning project for duplicate elements
+8/9/2026 11:40:10 PM	Finished duplicate element processing
+8/9/2026 11:40:10 PM	Finished importing database.
+8/9/2026 11:40:10 PM	A summary of the import was saved to the following location: C:\Users\omarn\source\repos\Airport-Visit-Management\AirportVisitSystem\Database\AirportVisitDatabase2\Import Schema Logs\AirportVisitDatabase_20260809083955.log
+8/9/2026 11:40:10 PM	Click Finish to continue...

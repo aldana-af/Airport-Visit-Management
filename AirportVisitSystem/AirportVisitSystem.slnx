@@ -4,4 +4,8 @@
     <Build />
     <Deploy />
   </Project>
+  <Project Path="Database/AirportVisitDatabase2/AirportVisitDatabase2.sqlproj" Id="4896a398-7440-4763-966b-785426d84739">
+    <Build />
+    <Deploy />
+  </Project>
 </Solution>
