@@ -18,6 +18,6 @@ namespace AirportVisitSystem.Models
 
         public string Email { get; set; }
 
-        public string VisitorStatus { get; set; }
+        //public string VisitorStatus { get; set; }
     }
 }

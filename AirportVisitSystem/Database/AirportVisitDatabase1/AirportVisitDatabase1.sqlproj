@@ -77,4 +77,9 @@
     <Build Include="dbo\Stored Procedures\Add_New_EmployeeHost.sql" />
     <Build Include="dbo\Stored Procedures\Add_New_SiteVisitingManager.sql" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="dbo\Stored Procedures\Add_New_Visit.sql" />
+    <None Include="dbo\Stored Procedures\Add_New_Visitor.sql" />
+    <None Include="dbo\Stored Procedures\Add_New_Visitor_To_Visit.sql" />
+  </ItemGroup>
 </Project>

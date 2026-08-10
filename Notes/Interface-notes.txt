@@ -1,0 +1,42 @@
+
+View 1 - Login page:
+Users enter username and password. if any input is incorrect they recieve message.
+then based on whether user is employee or manager, it takes them to their respective homepage.
+
+view 2 - employee homepage:
+greeting employee at the top with a logout button in top right corner.
+left side of the page has a tab (like in the notes app on macbooks) list of avaialable modules for employee.
+the rest of the page will just have a list of the employee upcoming visits, and each one has a button to view the visits details.
+the modules avaiable to the employee with their views:
+Visitor module:
+the main visitor page view will have a list of all the visitors in the database and their information.
+there will be a button at the top of the list that takes them to a new view to add a new visitor.
+the add new visitor view will be simple, just input visitor information and add button at the bottom that takes them back to visitor page.
+there will also be a search bar to the right of the add visitor button to search for visitor by name.
+Visit module:
+the main visit page will be similar to the visitor module.
+the only difference is that the add new visitor button will be replaced by a request visit button that takes them to a new view to request a visit.
+this request visit page will prompt the user to complete the request in a series of steps:
+step1 - enter the visit title, description and visit type (selected from dropdown menu that shows all types for VisitType database table)
+step2 - choose visitors from list of all visitors in database (when choosing each visitor this will create a new VisitVisitor record for each visitor within this visit)
+step3- select date through calendar, and set start and end times
+step4- enter request
+user will be taken back to visit page where they can see new visit record with 'pending'  in its info.
+
+View 3- manager homepage:
+greeting managerat the top with a logout button in top right corner.
+left side of the page has a tab (like in the notes app on macbooks) list of avaialable modules for manager.
+the rest of the page will just have a list of all upcoming visits (for all employees), and each one has a button to view the visits details.
+the modules avaiable to the manager with their views:
+Visitor module:
+similar to the employee view, however without the add new visitor button. they can only view.
+Visit module:
+similar to employee view, however they cannot request new visit, only view.
+Approval module:
+recieve a list of all pending visit requests. a search bar at the top right. each visit in the list has a button that says manage that takes manager to the approving page.
+this page will display all the information for the visit that was inputted during the request, as well as the employee who submitted it.
+the visitors for this visit will be listed with their information and with a checkbox next to each one to approve or deny them.
+there will be a button above the list to approve all visitors at once.
+there will be a submit button at the bottom that submits the visit as approved as well as the visitors (and adds the manager as the approving manager to the VisitVisitor records).
+next to it there will be a button to reject the entire visit and the visitors at once.
+then the user is taken back to the approval module main page.
