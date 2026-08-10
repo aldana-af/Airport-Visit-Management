@@ -5,9 +5,9 @@ namespace AirportVisitSystem.Models
 {
     public class Visitor
     {
-        public int Id { get; set; }
+        public int VisitorID { get; set; }
 
-        [Required(ErrorMessage = "Name is required.")]
+        //[Required(ErrorMessage = "Name is required.")]
         public string Name { get; set; }
 
         public string Organization { get; set; }

@@ -1,0 +1,27 @@
+﻿@model List<ApprovalQueueRow>
+@{
+    Layout = "_AppLayout";
+}
+
+<div class="module-header">
+    <h2>Pending Approvals</h2>
+    <form asp-action="Index" method="get" class="search-form">
+        <input type="text" name="searchTerm" value="@ViewData["SearchTerm"]" placeholder="Search by title..." />
+        <button type="submit">Search</button>
+    </form>
+</div>
+
+<table class="data-table">
+    <thead><tr><th>Title</th><th>Date</th><th>Requested By</th><th></th></tr></thead>
+    <tbody>
+        @foreach (var row in Model)
+        {
+            <tr>
+                <td>@row.VisitTitle</td>
+                <td>@row.VisitDate.ToShortDateString()</td>
+                <td>@row.RequestedByName</td>
+                <td><a class="btn btn-primary" asp-action="Manage" asp-route-visitId="@row.VisitID">Manage</a></td>
+            </tr>
+        }
+    </tbody>
+</table>

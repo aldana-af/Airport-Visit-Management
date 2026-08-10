@@ -7,8 +7,12 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-// database context setup
+// database context setup (office computer)
 builder.Services.AddDbContext<AirportVisitDb>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// database context setup (home computer)
+builder.Services.AddDbContext<AirportVisitDatabase1>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // cookie authentication setup
@@ -18,7 +22,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.LoginPath = "/Account/Login";
         options.LogoutPath = "/Account/Logout";
         options.AccessDeniedPath = "/Account/AccessDenied";
-    });)
+    });
 
 var app = builder.Build();
 

@@ -1,0 +1,36 @@
+﻿@model VisitDetailsViewModel
+@{
+    Layout = "_AppLayout";
+}
+
+<h2>@Model.Visit.VisitTitle</h2>
+<p>@Model.Visit.VisitDescription</p>
+
+<dl>
+    <dt>Type</dt>
+    <dd>@Model.VisitType.Type</dd>
+    <dt>Department</dt>
+    <dd>@Model.Department.DepartmentName</dd>
+    <dt>Host</dt>
+    <dd>@Model.Host.Name</dd>
+    <dt>Date</dt>
+    <dd>@Model.Visit.VisitDate.ToShortDateString()</dd>
+    <dt>Time</dt>
+    <dd>@Model.Visit.StartTime – @Model.Visit.EndTime</dd>
+    <dt>Status</dt>
+    <dd>@Model.Visit.VisitStatus</dd>
+</dl>
+
+<h3>Visitors</h3>
+<table class="data-table">
+    <thead><tr><th>Name</th><th>Status</th></tr></thead>
+    <tbody>
+        @foreach (var v in Model.Visitors)
+        {
+            <tr>
+                <td>@v.Name</td>
+                <td>@v.VisitorStatus</td>
+            </tr>
+        }
+    </tbody>
+</table>

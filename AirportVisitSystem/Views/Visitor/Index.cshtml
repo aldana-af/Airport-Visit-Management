@@ -1,0 +1,33 @@
+﻿@model List<Visitor>
+@{
+    Layout = "_AppLayout";
+}
+
+<div class="module-header">
+    @if (ViewData["Role"] as string == "Employee")
+    {
+        <a class="btn btn-primary" asp-action="Create">+ Add Visitor</a>
+    }
+    <form asp-action="Index" method="get" class="search-form">
+        <input type="text" name="searchTerm" value="@ViewData["SearchTerm"]" placeholder="Search by name..." />
+        <button type="submit">Search</button>
+    </form>
+</div>
+
+<table class="data-table">
+    <thead>
+        <tr><th>Name</th><th>Organization</th><th>Position</th><th>Phone</th><th>Email</th></tr>
+    </thead>
+    <tbody>
+        @foreach (var visitor in Model)
+        {
+            <tr>
+                <td>@visitor.Name</td>
+                <td>@visitor.Organization</td>
+                <td>@visitor.Position</td>
+                <td>@visitor.Phone</td>
+                <td>@visitor.Email</td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
 
 namespace AirportVisitSystem.Models
@@ -12,16 +13,15 @@ namespace AirportVisitSystem.Models
         public string VisitDescription { get; set; }
 
         [Required]
-        public int DepartmentID { get; set; }
-        public IEnumerable<SelectListItem> Departments { get; set; }
-
-        [Required]
-        public int HostEmployeeID { get; set; }
-        public IEnumerable<SelectListItem> Hosts { get; set; }
-
-        [Required]
         public int VisitTypeID { get; set; }
+
+        [ValidateNever]
         public IEnumerable<SelectListItem> VisitTypes { get; set; }
+
+        public List<int> SelectedVisitorIds { get; set; } = new();
+
+        [ValidateNever]
+        public List<Visitor> AllVisitors { get; set; }
 
         [Required]
         [DataType(DataType.Date)]

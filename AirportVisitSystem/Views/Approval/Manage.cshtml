@@ -1,0 +1,58 @@
+﻿@model ApprovalManageViewModel
+@{
+    Layout = "_AppLayout";
+}
+
+<h2>@Model.Visit.VisitTitle</h2>
+<p>@Model.Visit.VisitDescription</p>
+
+<dl>
+    <dt>Type</dt>
+    <dd>@Model.VisitType.Type</dd>
+    <dt>Department</dt>
+    <dd>@Model.Department.DepartmentName</dd>
+    <dt>Requested By</dt>
+    <dd>@Model.RequestedBy.Name</dd>
+    <dt>Date</dt>
+    <dd>@Model.Visit.VisitDate.ToShortDateString()</dd>
+    <dt>Time</dt>
+    <dd>@Model.Visit.StartTime – @Model.Visit.EndTime</dd>
+</dl>
+
+<form id="approveForm" asp-action="Approve" method="post">
+    <input type="hidden" name="visitId" value="@Model.Visit.VisitID" />
+
+    <button type="button" id="approveAllBtn" class="btn-secondary">Approve All Visitors</button>
+
+    <table class="data-table">
+        <thead><tr><th></th><th>Name</th><th>Organization</th><th>Phone</th><th>Email</th></tr></thead>
+        <tbody>
+            @foreach (var v in Model.Visitors)
+            {
+                <tr>
+                    <td>
+                        <input type="checkbox" class="visitor-check" name="AllowedVisitVisitorIds"
+                               value="@v.VisitVisitorID" checked="@(v.IsAllowed ? "checked" : null)" />
+                    </td>
+                    <td>@v.Name</td>
+                    <td>@v.Organization</td>
+                    <td>@v.Phone</td>
+                    <td>@v.Email</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+<form asp-action="Reject" method="post" onsubmit="return confirm('Reject this entire visit and all its visitors?');">
+    <input type="hidden" name="visitId" value="@Model.Visit.VisitID" />
+    <button type="submit" class="btn btn-danger">Reject Entire Visit</button>
+</form>
+
+<script>
+    document.getElementById('approveAllBtn').addEventListener('click', () => {
+        document.querySelectorAll('.visitor-check').forEach(cb => cb.checked = true);
+    });
+</script>

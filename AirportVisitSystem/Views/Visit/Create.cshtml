@@ -1,0 +1,91 @@
+﻿@model CreateVisitViewModel
+@{
+    Layout = "_AppLayout";
+}
+
+<h2>Request a Visit</h2>
+
+<form asp-action="Create" method="post" id="visitWizard">
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <div class="step" data-step="1">
+        <h3>Step 1: Visit Details</h3>
+        <div class="form-group">
+            <label asp-for="VisitTitle"></label>
+            <input asp-for="VisitTitle" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label asp-for="VisitDescription"></label>
+            <textarea asp-for="VisitDescription" class="form-control"></textarea>
+        </div>
+        <div class="form-group">
+            <label asp-for="VisitTypeID"></label>
+            <select asp-for="VisitTypeID" asp-items="Model.VisitTypes" class="form-control">
+                <option value="">-- Select Type --</option>
+            </select>
+        </div>
+        <button type="button" class="btn-next">Next</button>
+    </div>
+
+    <div class="step" data-step="2" style="display:none;">
+        <h3>Step 2: Select Visitors</h3>
+        <div class="visitor-checklist">
+            @foreach (var visitor in Model.AllVisitors)
+            {
+                <label class="visitor-item">
+                    <input type="checkbox" name="SelectedVisitorIds" value="@visitor.VisitorID" />
+                    @visitor.Name — @visitor.Organization
+                </label>
+            }
+        </div>
+        <button type="button" class="btn-back">Back</button>
+        <button type="button" class="btn-next">Next</button>
+    </div>
+
+    <div class="step" data-step="3" style="display:none;">
+        <h3>Step 3: Date &amp; Time</h3>
+        <div class="form-group">
+            <label asp-for="VisitDate"></label>
+            <input asp-for="VisitDate" type="date" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label asp-for="StartTime"></label>
+            <input asp-for="StartTime" type="time" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label asp-for="EndTime"></label>
+            <input asp-for="EndTime" type="time" class="form-control" />
+        </div>
+        <button type="button" class="btn-back">Back</button>
+        <button type="button" class="btn-next">Next</button>
+    </div>
+
+    <div class="step" data-step="4" style="display:none;">
+        <h3>Step 4: Confirm Request</h3>
+        <p>Review your details above, then submit the request.</p>
+        <button type="button" class="btn-back">Back</button>
+        <button type="submit" class="btn btn-primary">Submit Request</button>
+    </div>
+</form>
+
+<script>
+    const steps = document.querySelectorAll('.step');
+    let current = 1;
+
+    function showStep(n) {
+        steps.forEach(s => s.style.display = 'none');
+        document.querySelector(`.step[data-step="${n}"]`).style.display = 'block';
+        current = n;
+    }
+
+    document.getElementById('visitWizard').addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA') {
+        e.preventDefault();
+    }
+    });
+
+    document.querySelectorAll('.btn-next').forEach(btn =>
+        btn.addEventListener('click', () => showStep(current + 1)));
+    document.querySelectorAll('.btn-back').forEach(btn =>
+        btn.addEventListener('click', () => showStep(current - 1)));
+</script>

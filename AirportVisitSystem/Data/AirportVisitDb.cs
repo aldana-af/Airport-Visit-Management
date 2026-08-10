@@ -9,23 +9,27 @@ namespace AirportVisitSystem.Data
         { }
 
         // DbSets for existing models. Add additional DbSet<> properties as needed.
+        public DbSet<Logins> Logins { get; set; }
         public DbSet<EmployeeHost> EmployeeHosts { get; set; }
         public DbSet<SiteVisitingManager> SiteVisitingManagers { get; set; }
-        public DbSet<Logins> Logins { get; set; }
-        public DbSet<Visitor> Visitor { get; set; }
-        public DbSet<Visit> Visit { get; set; }
-        public DbSet<VisitType> VisitType { get; set; }
-        public DbSet<Department> Department { get; set; }
+        public DbSet<Department> Departments { get; set; }
+        public DbSet<VisitType> VisitTypes { get; set; }
+        public DbSet<Visitor> Visitors { get; set; }
+        public DbSet<Visit> Visits { get; set; }
+        public DbSet<VisitVisitor> VisitVisitors { get; set; }
+        public DbSet<Approval> Approvals { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Logins>().ToTable("Logins");
             modelBuilder.Entity<EmployeeHost>().ToTable("EmployeeHost");
             modelBuilder.Entity<SiteVisitingManager>().ToTable("SiteVisitingManager");
+            modelBuilder.Entity<Department>().ToTable("Department");
+            modelBuilder.Entity<VisitType>().ToTable("VisitType");
             modelBuilder.Entity<Visitor>().ToTable("Visitor");
             modelBuilder.Entity<Visit>().ToTable("Visit");
-            modelBuilder.Entity<VisitType>().ToTable("VisitType");
-            modelBuilder.Entity<Department>().ToTable("Department");
+            modelBuilder.Entity<VisitVisitor>().ToTable("VisitVisitor");
+            modelBuilder.Entity<Approval>().ToTable("Approval");
         }
     }
 }

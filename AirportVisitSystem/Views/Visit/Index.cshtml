@@ -1,0 +1,32 @@
+﻿@model List<Visit>
+@{
+    Layout = "_AppLayout";
+}
+
+<div class="module-header">
+    @if (ViewData["Role"] as string == "Employee")
+    {
+        <a class="btn btn-primary" asp-action="Create">+ Request Visit</a>
+    }
+    <form asp-action="Index" method="get" class="search-form">
+        <input type="text" name="searchTerm" value="@ViewData["SearchTerm"]" placeholder="Search by title..." />
+        <button type="submit">Search</button>
+    </form>
+</div>
+
+<table class="data-table">
+    <thead>
+        <tr><th>Title</th><th>Date</th><th>Status</th><th></th></tr>
+    </thead>
+    <tbody>
+        @foreach (var visit in Model)
+        {
+            <tr>
+                <td>@visit.VisitTitle</td>
+                <td>@visit.VisitDate.ToShortDateString()</td>
+                <td>@visit.VisitStatus</td>
+                <td><a asp-action="Details" asp-route-id="@visit.VisitID">View Details</a></td>
+            </tr>
+        }
+    </tbody>
+</table>

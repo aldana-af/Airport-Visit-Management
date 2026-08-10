@@ -80,6 +80,6 @@
   <ItemGroup>
     <None Include="dbo\Stored Procedures\Add_New_Visit.sql" />
     <None Include="dbo\Stored Procedures\Add_New_Visitor.sql" />
-    <None Include="dbo\Stored Procedures\Add_New_Visitor_To_Visit.sql" />
+    <None Include="dbo\Stored Procedures\Add_Visitor_To_Visit.sql" />
   </ItemGroup>
 </Project>

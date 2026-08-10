@@ -1,0 +1,24 @@
+﻿@model List<Visit>
+@{
+    ViewData["Title"] = "Employee Home";
+    Layout = "_AppLayout";
+}
+
+<h2>Upcoming Visits</h2>
+
+<table class="visit-list">
+    <thead>
+        <tr><th>Title</th><th>Date</th><th>Status</th><th></th></tr>
+    </thead>
+    <tbody>
+        @foreach (var visit in Model)
+        {
+            <tr>
+                <td>@visit.VisitTitle</td>
+                <td>@visit.VisitDate.ToShortDateString()</td>
+                <td>@visit.VisitStatus</td>
+                <td><a asp-controller="Visit" asp-action="Details" asp-route-id="@visit.VisitID">View Details</a></td>
+            </tr>
+        }
+    </tbody>
+</table>

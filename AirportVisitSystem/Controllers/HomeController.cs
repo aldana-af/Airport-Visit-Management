@@ -1,25 +1,45 @@
-using AirportVisitSystem.Models;
+using AirportVisitSystem.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
+using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
-namespace AirportVisitSystem.Controllers
+public class HomeController : Controller
 {
-    public class HomeController : Controller
+    private readonly AirportVisitDatabase1 _context;
+    public HomeController(AirportVisitDatabase1 context) => _context = context;
+
+    [Authorize(Roles = "Employee")]
+    public async Task<IActionResult> Employee()
     {
-        public IActionResult Index()
-        {
-            return View();
-        }
+        int loginId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+        var employee = _context.EmployeeHosts.First(e => e.LoginID == loginId);
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
+        ViewData["Greeting"] = $"Welcome, {employee.Name}";
+        ViewData["Role"] = "Employee";
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
+        var upcomingVisits = await _context.Visits
+            .Where(v => v.HostEmployeeID == employee.EmployeeID && v.VisitDate >= DateTime.Today)
+            .OrderBy(v => v.VisitDate)
+            .ToListAsync();
+
+        return View(upcomingVisits);
+    }
+
+    [Authorize(Roles = "Manager")]
+    public async Task<IActionResult> Manager()
+    {
+        int loginId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+        var manager = _context.SiteVisitingManagers.First(m => m.ManagerLoginID == loginId);
+
+        ViewData["Greeting"] = $"Welcome, {manager.Name}";
+        ViewData["Role"] = "Manager";
+
+        var upcomingVisits = await _context.Visits
+            .Where(v => v.VisitDate >= DateTime.Today)
+            .OrderBy(v => v.VisitDate)
+            .ToListAsync();
+
+        return View(upcomingVisits);
     }
 }
