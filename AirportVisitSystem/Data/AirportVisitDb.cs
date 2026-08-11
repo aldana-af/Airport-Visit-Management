@@ -21,9 +21,9 @@ namespace AirportVisitSystem.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Logins>().ToTable("Logins");
-            modelBuilder.Entity<EmployeeHost>().ToTable("EmployeeHost");
-            modelBuilder.Entity<SiteVisitingManager>().ToTable("SiteVisitingManager");
+            modelBuilder.Entity<Logins>().ToTable("Logins").HasKey(l => l.LoginID);
+            modelBuilder.Entity<EmployeeHost>().ToTable("EmployeeHost").HasKey(e => e.EmployeeID);
+            modelBuilder.Entity<SiteVisitingManager>().ToTable("SiteVisitingManager").HasKey(m => m.ManagerID);
             modelBuilder.Entity<Department>().ToTable("Department");
             modelBuilder.Entity<VisitType>().ToTable("VisitType");
             modelBuilder.Entity<Visitor>().ToTable("Visitor");

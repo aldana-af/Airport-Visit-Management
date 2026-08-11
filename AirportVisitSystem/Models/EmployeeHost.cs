@@ -1,7 +1,10 @@
-﻿namespace AirportVisitSystem.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace AirportVisitSystem.Models
 {
     public class EmployeeHost
     {
+        //[Key]
         public int EmployeeID { get; set; }
 
         public string Name { get; set; }

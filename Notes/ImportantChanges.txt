@@ -1,0 +1,13 @@
+Changes to databse (or other) to maintain similar versions.
+
+----8/11/2026----------------------------------------------------------------
+Changes status
+office computer: checked-->yes, added-->yes
+home computer: 
+1. change BadgeID and CheckIn columns in VisitVisitor to NULL
+2. Null ApprovingManagerID in Approval table. Use code to check, if answer is no user alter code to null.
+check code:
+SELECT IS_NULLABLE FROM INFORMATION_SCHEMA.COLUMNS 
+WHERE TABLE_NAME = 'Approval' AND COLUMN_NAME = 'ApprovingManagerID';
+null code:
+ALTER TABLE Approval ALTER COLUMN ApprovingManagerID INT NULL;

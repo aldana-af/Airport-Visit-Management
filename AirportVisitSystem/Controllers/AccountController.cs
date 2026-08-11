@@ -8,10 +8,17 @@ using System.Security.Claims;
 
 public class AccountController : Controller
 {
-    private readonly AirportVisitDatabase1 _context;
+    // home computer
+    //private readonly AirportVisitDatabase1 _context;
+    // office computer
+    private readonly AirportVisitDb _context;
+
     private readonly PasswordHasher<object> _hasher = new();
 
-    public AccountController(AirportVisitDatabase1 context)
+    // home computer
+    //public AccountController(AirportVisitDatabase1 context)
+     // office computer
+     public AccountController(AirportVisitDb context)
     {
         _context = context;
     }

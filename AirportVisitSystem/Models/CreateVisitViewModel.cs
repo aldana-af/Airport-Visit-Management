@@ -6,7 +6,7 @@ namespace AirportVisitSystem.Models
 {
     public class CreateVisitViewModel
     {
-        [Required]
+        [Required(ErrorMessage = "Visit Title is required.")]
         public string VisitTitle { get; set; }
 
         [Required]
@@ -23,7 +23,7 @@ namespace AirportVisitSystem.Models
         [ValidateNever]
         public List<Visitor> AllVisitors { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Specified date required for visit.")]
         [DataType(DataType.Date)]
         public DateTime VisitDate { get; set; }
 

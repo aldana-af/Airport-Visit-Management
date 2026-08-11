@@ -4,7 +4,7 @@ namespace AirportVisitSystem.Models
 {
     public class CreateVisitorViewModel
     {
-        [Required]
+        [Required(ErrorMessage = "Visitor Name cannot be empty.")]
         public string Name { get; set; }
 
         [Required]

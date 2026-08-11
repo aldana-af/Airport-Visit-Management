@@ -8,8 +8,16 @@ using System.Security.Claims;
 
 public class VisitController : Controller
 {
-    private readonly AirportVisitDatabase1 _context;
-    public VisitController(AirportVisitDatabase1 context) => _context = context;
+    // home computer
+    //private readonly AirportVisitDatabase1 _context;
+    // office computer
+    private readonly AirportVisitDb _context;
+
+    // home computer
+    //public HomeController(AirportVisitDatabase1 context) => _context = context;
+    // office computer
+    public VisitController(AirportVisitDb context) => _context = context;
+
 
     [Authorize(Roles = "Employee,Manager")]
     public async Task<IActionResult> Index(string searchTerm)
