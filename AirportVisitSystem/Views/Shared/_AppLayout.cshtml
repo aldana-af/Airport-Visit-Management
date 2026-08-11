@@ -4,6 +4,7 @@
     <meta charset="utf-8" />
     <title>@ViewData["Title"] - Airport Visitor Management</title>
     <link rel="stylesheet" href="~/css/site.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="topbar">
@@ -15,18 +16,21 @@
 
     <div class="app-shell">
         <nav class="sidebar">
+            @{
+                var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+            }
             @if (ViewData["Role"] as string == "Employee")
             {
-                <a asp-controller="Home" asp-action="Employee">Home</a>
-                <a asp-controller="Visitor" asp-action="Index">Visitors</a>
-                <a asp-controller="Visit" asp-action="Index">Visits</a>
+                <a asp-controller="Home" asp-action="Employee" class="@(currentController == "Home" ? "active" : "")">Home</a>
+                <a asp-controller="Visitor" asp-action="Index" class="@(currentController == "Visitor" ? "active" : "")">Visitors</a>
+                <a asp-controller="Visit" asp-action="Index" class="@(currentController == "Visit" ? "active" : "")">Visits</a>
             }
             else if (ViewData["Role"] as string == "Manager")
             {
-                <a asp-controller="Home" asp-action="Manager">Home</a>
-                <a asp-controller="Visitor" asp-action="Index">Visitors</a>
-                <a asp-controller="Visit" asp-action="Index">Visits</a>
-                <a asp-controller="Approval" asp-action="Index">Approvals</a>
+                <a asp-controller="Home" asp-action="Manager" class="@(currentController == "Home" ? "active" : "")">Home</a>
+                <a asp-controller="Visitor" asp-action="Index" class="@(currentController == "Visitor" ? "active" : "")">Visitors</a>
+                <a asp-controller="Visit" asp-action="Index" class="@(currentController == "Visit" ? "active" : "")">Visits</a>
+                <a asp-controller="Approval" asp-action="Index" class="@(currentController == "Approval" ? "active" : "")">Approvals</a>
             }
         </nav>
 

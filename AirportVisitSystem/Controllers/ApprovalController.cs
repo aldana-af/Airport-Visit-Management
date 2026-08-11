@@ -9,14 +9,14 @@ using System.Security.Claims;
 public class ApprovalController : Controller
 {
     // home computer
-    //private readonly AirportVisitDatabase1 _context;
+    private readonly AirportVisitDatabase1 _context;
     // office computer
-    private readonly AirportVisitDb _context;
-    
+    //private readonly AirportVisitDb _context;
+
     //home computer
-    //public ApprovalController(AirportVisitDatabase1 context) => _context = context;
+   public ApprovalController(AirportVisitDatabase1 context) => _context = context;
     //office computer
-    public ApprovalController(AirportVisitDb context) => _context = context;
+    //public ApprovalController(AirportVisitDb context) => _context = context;
 
     public async Task<IActionResult> Index(string searchTerm)
     {

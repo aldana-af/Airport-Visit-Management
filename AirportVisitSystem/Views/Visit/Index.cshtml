@@ -6,11 +6,11 @@
 <div class="module-header">
     @if (ViewData["Role"] as string == "Employee")
     {
-        <a class="btn btn-primary" asp-action="Create">+ Request Visit</a>
+        <a class="btn btn-primary" asp-action="Create">+ Request visit</a>
     }
     <form asp-action="Index" method="get" class="search-form">
         <input type="text" name="searchTerm" value="@ViewData["SearchTerm"]" placeholder="Search by title..." />
-        <button type="submit">Search</button>
+        <button type="submit" class="btn btn-secondary">Search</button>
     </form>
 </div>
 
@@ -24,8 +24,8 @@
             <tr>
                 <td>@visit.VisitTitle</td>
                 <td>@visit.VisitDate.ToShortDateString()</td>
-                <td>@visit.VisitStatus</td>
-                <td><a asp-action="Details" asp-route-id="@visit.VisitID">View Details</a></td>
+                <td><span class="badge badge-@visit.VisitStatus.ToLower()">@visit.VisitStatus</span></td>
+                <td><a asp-action="Details" asp-route-id="@visit.VisitID">View details</a></td>
             </tr>
         }
     </tbody>

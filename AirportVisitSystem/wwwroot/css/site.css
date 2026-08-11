@@ -1,7 +1,9 @@
 html {
   font-size: 14px;
 }
-
+body {
+    font-family: 'Inter', sans-serif;
+}
 @media (min-width: 768px) {
   html {
     font-size: 16px;
@@ -28,4 +30,346 @@ body {
 
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
   text-align: start;
+}
+
+/* New lines for UI design*/
+
+:root {
+    --color-page-accent: #DB8A34;
+    --color-cream: #F0EFDD;
+    --color-cream-light: #F7F6EC;
+    --color-sidebar: #E6E4CC;
+    --color-border: #AEBB9C;
+    --color-border-light: #DAD8C0;
+    --color-rust: #8B3A0C;
+    --color-rust-text: #F5EFE0;
+    --color-text-dark: #2C2410;
+    --color-text-muted: #6B6248;
+    --color-text-faint: #8A8168;
+    --color-danger: #A33333;
+    --color-badge-pending-bg: #F0DFC0;
+    --color-badge-pending-text: #6B4A0C;
+    --color-badge-approved-bg: #DCE8CC;
+    --color-badge-approved-text: #3B5A1E;
+    --color-badge-rejected-bg: #F3D6D6;
+    --color-badge-rejected-text: #8A2A2A;
+}
+
+body {
+    background: var(--color-cream);
+    color: var(--color-text-dark);
+    margin: 0;
+}
+
+a {
+    color: var(--color-rust);
+    text-decoration: none;
+}
+
+    a:hover {
+        text-decoration: underline;
+    }
+
+/* Shared app shell (Home, Visitor, Visit, Approval) */
+.topbar {
+    background: var(--color-rust);
+    padding: 12px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+    .topbar .greeting {
+        color: var(--color-rust-text);
+        font-size: 14px;
+        font-weight: 500;
+    }
+
+.btn-logout {
+    background: transparent;
+    border: 1px solid var(--color-rust-text);
+    color: var(--color-rust-text);
+    font-size: 12px;
+    padding: 5px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+    .btn-logout:hover {
+        background: rgba(245, 239, 224, 0.15);
+    }
+
+.app-shell {
+    display: flex;
+    min-height: calc(100vh - 48px);
+}
+
+.sidebar {
+    width: 160px;
+    background: var(--color-sidebar);
+    border-right: 1px solid var(--color-border);
+    padding: 16px 0;
+    display: flex;
+    flex-direction: column;
+}
+
+    .sidebar a {
+        padding: 10px 20px;
+        font-size: 13px;
+        color: var(--color-text-muted);
+        text-decoration: none;
+    }
+
+        .sidebar a:hover {
+            background: rgba(219, 138, 52, 0.15);
+            text-decoration: none;
+        }
+
+        .sidebar a.active {
+            background: var(--color-page-accent);
+            color: var(--color-text-dark);
+            font-weight: 500;
+        }
+
+.content {
+    flex: 1;
+    padding: 24px 28px;
+}
+
+/* Tables and module headers, shared across Visitor/Visit/Approval */
+.module-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    gap: 12px;
+}
+
+.search-form input[type="text"] {
+    width: 220px;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+    .data-table th {
+        text-align: left;
+        padding: 8px 6px;
+        color: var(--color-text-muted);
+        border-bottom: 1px solid var(--color-border);
+        font-weight: 500;
+    }
+
+    .data-table td {
+        padding: 9px 6px;
+        border-bottom: 1px solid var(--color-border-light);
+        color: var(--color-text-dark);
+    }
+
+    .data-table tr:last-child td {
+        border-bottom: none;
+    }
+
+/* Buttons */
+.btn {
+    font-size: 13px;
+    padding: 7px 16px;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1px solid transparent;
+    display: inline-block;
+}
+
+.btn-primary {
+    background: var(--color-rust);
+    color: var(--color-rust-text);
+    border: none;
+}
+
+    .btn-primary:hover {
+        background: #742F09;
+        text-decoration: none;
+    }
+
+.btn-secondary {
+    background: transparent;
+    border: 1px solid var(--color-rust);
+    color: var(--color-rust);
+}
+
+    .btn-secondary:hover {
+        background: rgba(139, 58, 12, 0.08);
+    }
+
+.btn-danger {
+    background: transparent;
+    border: 1px solid var(--color-danger);
+    color: var(--color-danger);
+}
+
+    .btn-danger:hover {
+        background: rgba(163, 51, 51, 0.08);
+    }
+
+/* Status badges */
+.badge {
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 500;
+}
+
+.badge-pending {
+    background: var(--color-badge-pending-bg);
+    color: var(--color-badge-pending-text);
+}
+
+.badge-approved {
+    background: var(--color-badge-approved-bg);
+    color: var(--color-badge-approved-text);
+}
+
+.badge-rejected {
+    background: var(--color-badge-rejected-bg);
+    color: var(--color-badge-rejected-text);
+}
+
+.badge-allowed {
+    background: var(--color-badge-approved-bg);
+    color: var(--color-badge-approved-text);
+}
+
+.badge-denied {
+    background: var(--color-badge-rejected-bg);
+    color: var(--color-badge-rejected-text);
+}
+
+.badge-complete {
+    background: var(--color-sidebar);
+    color: var(--color-text-dark);
+}
+
+/* Forms */
+.form-group {
+    margin-bottom: 16px;
+}
+
+    .form-group label {
+        display: block;
+        font-size: 13px;
+        color: var(--color-text-muted);
+        margin-bottom: 6px;
+    }
+
+.form-control, input[type="text"], input[type="email"], input[type="password"],
+input[type="date"], input[type="time"], select, textarea {
+    width: 100%;
+    background: var(--color-cream-light);
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    padding: 8px 10px;
+    font-size: 14px;
+    font-family: inherit;
+    color: var(--color-text-dark);
+    box-sizing: border-box;
+}
+
+.text-danger {
+    color: var(--color-danger);
+    font-size: 13px;
+}
+
+/* Login page */
+.login-page {
+    min-height: 100vh;
+    background: var(--color-page-accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-card {
+    width: 340px;
+    background: var(--color-cream);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    padding: 2rem 1.75rem;
+}
+
+.login-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 4px;
+}
+
+.login-brand-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background: var(--color-rust);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: var(--color-rust-text);
+    font-weight: 500;
+}
+
+.login-brand-name {
+    font-weight: 500;
+    font-size: 16px;
+    margin: 0;
+    color: var(--color-text-dark);
+}
+
+.login-subtitle {
+    font-size: 13px;
+    color: var(--color-text-muted);
+    margin: 0 0 1.75rem;
+}
+
+.login-footer {
+    font-size: 12px;
+    color: var(--color-text-faint);
+    text-align: center;
+    margin: 1.25rem 0 0;
+}
+
+/* Approval visitor checklist */
+.visitor-check-table td:first-child {
+    width: 24px;
+}
+
+/* Visit wizard */
+.step h3 {
+    font-size: 15px;
+    margin: 0 0 14px;
+}
+
+.step .btn {
+    margin-top: 8px;
+    margin-right: 8px;
+}
+
+.visitor-checklist {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: 260px;
+    overflow-y: auto;
+    border: 1px solid var(--color-border-light);
+    border-radius: 6px;
+    padding: 10px 14px;
+}
+
+.visitor-item {
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }

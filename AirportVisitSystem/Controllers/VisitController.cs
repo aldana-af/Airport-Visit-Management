@@ -9,14 +9,14 @@ using System.Security.Claims;
 public class VisitController : Controller
 {
     // home computer
-    //private readonly AirportVisitDatabase1 _context;
+    private readonly AirportVisitDatabase1 _context;
     // office computer
-    private readonly AirportVisitDb _context;
+    //private readonly AirportVisitDb _context;
 
     // home computer
-    //public HomeController(AirportVisitDatabase1 context) => _context = context;
+    public VisitController(AirportVisitDatabase1 context) => _context = context;
     // office computer
-    public VisitController(AirportVisitDb context) => _context = context;
+    //public VisitController(AirportVisitDb context) => _context = context;
 
 
     [Authorize(Roles = "Employee,Manager")]

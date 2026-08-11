@@ -4,9 +4,9 @@
     Layout = "_AppLayout";
 }
 
-<h2>Upcoming Visits</h2>
+<h2>Upcoming visits</h2>
 
-<table class="visit-list">
+<table class="data-table">
     <thead>
         <tr><th>Title</th><th>Date</th><th>Status</th><th></th></tr>
     </thead>
@@ -16,8 +16,8 @@
             <tr>
                 <td>@visit.VisitTitle</td>
                 <td>@visit.VisitDate.ToShortDateString()</td>
-                <td>@visit.VisitStatus</td>
-                <td><a asp-controller="Visit" asp-action="Details" asp-route-id="@visit.VisitID">View Details</a></td>
+                <td><span class="badge badge-@visit.VisitStatus.ToLower()">@visit.VisitStatus</span></td>
+                <td><a asp-controller="Visit" asp-action="Details" asp-route-id="@visit.VisitID">View details</a></td>
             </tr>
         }
     </tbody>

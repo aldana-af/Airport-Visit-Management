@@ -7,14 +7,14 @@ using Microsoft.EntityFrameworkCore;
 public class VisitorController : Controller
 {
     // home computer
-    //private readonly AirportVisitDatabase1 _context;
+    private readonly AirportVisitDatabase1 _context;
     // office computer
-    private readonly AirportVisitDb _context;
+    //private readonly AirportVisitDb _context;
 
     // home computer
-    //public HomeController(AirportVisitDatabase1 context) => _context = context;
+    public VisitorController(AirportVisitDatabase1 context) => _context = context;
     // office computer
-    public VisitorController(AirportVisitDb context) => _context = context;
+    //public VisitorController(AirportVisitDb context) => _context = context;
 
 
     [Authorize(Roles = "Employee,Manager")]

@@ -4,27 +4,22 @@
 }
 
 <h2>@Model.Visit.VisitTitle</h2>
-<p>@Model.Visit.VisitDescription</p>
+<p style="color: var(--color-text-muted); font-size: 14px;">@Model.Visit.VisitDescription</p>
 
-<dl>
-    <dt>Type</dt>
-    <dd>@Model.VisitType.Type</dd>
-    <dt>Department</dt>
-    <dd>@Model.Department.DepartmentName</dd>
-    <dt>Requested By</dt>
-    <dd>@Model.RequestedBy.Name</dd>
-    <dt>Date</dt>
-    <dd>@Model.Visit.VisitDate.ToShortDateString()</dd>
-    <dt>Time</dt>
-    <dd>@Model.Visit.StartTime – @Model.Visit.EndTime</dd>
-</dl>
+<div style="display: flex; gap: 28px; margin: 18px 0; font-size: 13px;">
+    <div><span style="color: var(--color-text-faint);">Type</span><br /><span>@Model.VisitType.Type</span></div>
+    <div><span style="color: var(--color-text-faint);">Department</span><br /><span>@Model.Department.DepartmentName</span></div>
+    <div><span style="color: var(--color-text-faint);">Requested by</span><br /><span>@Model.RequestedBy.Name</span></div>
+    <div><span style="color: var(--color-text-faint);">Date</span><br /><span>@Model.Visit.VisitDate.ToShortDateString()</span></div>
+    <div><span style="color: var(--color-text-faint);">Time</span><br /><span>@Model.Visit.StartTime – @Model.Visit.EndTime</span></div>
+</div>
 
 <form id="approveForm" asp-action="Approve" method="post">
     <input type="hidden" name="visitId" value="@Model.Visit.VisitID" />
 
-    <button type="button" id="approveAllBtn" class="btn-secondary">Approve All Visitors</button>
+    <button type="button" id="approveAllBtn" class="btn btn-secondary" style="margin-bottom: 14px;">Approve all visitors</button>
 
-    <table class="data-table">
+    <table class="data-table visitor-check-table">
         <thead><tr><th></th><th>Name</th><th>Organization</th><th>Phone</th><th>Email</th></tr></thead>
         <tbody>
             @foreach (var v in Model.Visitors)
@@ -43,12 +38,14 @@
         </tbody>
     </table>
 
-    <button type="submit" class="btn btn-primary">Submit</button>
+    <div style="margin-top: 18px; display: flex; gap: 10px;">
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
 </form>
 
-<form asp-action="Reject" method="post" onsubmit="return confirm('Reject this entire visit and all its visitors?');">
+<form asp-action="Reject" method="post" onsubmit="return confirm('Reject this entire visit and all its visitors?');" style="margin-top: 10px;">
     <input type="hidden" name="visitId" value="@Model.Visit.VisitID" />
-    <button type="submit" class="btn btn-danger">Reject Entire Visit</button>
+    <button type="submit" class="btn btn-danger">Reject entire visit</button>
 </form>
 
 <script>

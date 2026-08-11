@@ -4,24 +4,18 @@
 }
 
 <h2>@Model.Visit.VisitTitle</h2>
-<p>@Model.Visit.VisitDescription</p>
+<p style="color: var(--color-text-muted); font-size: 14px;">@Model.Visit.VisitDescription</p>
 
-<dl>
-    <dt>Type</dt>
-    <dd>@Model.VisitType.Type</dd>
-    <dt>Department</dt>
-    <dd>@Model.Department.DepartmentName</dd>
-    <dt>Host</dt>
-    <dd>@Model.Host.Name</dd>
-    <dt>Date</dt>
-    <dd>@Model.Visit.VisitDate.ToShortDateString()</dd>
-    <dt>Time</dt>
-    <dd>@Model.Visit.StartTime – @Model.Visit.EndTime</dd>
-    <dt>Status</dt>
-    <dd>@Model.Visit.VisitStatus</dd>
-</dl>
+<div style="display: flex; gap: 28px; margin: 18px 0; font-size: 13px;">
+    <div><span style="color: var(--color-text-faint);">Type</span><br /><span>@Model.VisitType.Type</span></div>
+    <div><span style="color: var(--color-text-faint);">Department</span><br /><span>@Model.Department.DepartmentName</span></div>
+    <div><span style="color: var(--color-text-faint);">Host</span><br /><span>@Model.Host.Name</span></div>
+    <div><span style="color: var(--color-text-faint);">Date</span><br /><span>@Model.Visit.VisitDate.ToShortDateString()</span></div>
+    <div><span style="color: var(--color-text-faint);">Time</span><br /><span>@Model.Visit.StartTime – @Model.Visit.EndTime</span></div>
+    <div><span style="color: var(--color-text-faint);">Status</span><br /><span class="badge badge-@Model.Visit.VisitStatus.ToLower()">@Model.Visit.VisitStatus</span></div>
+</div>
 
-<h3>Visitors</h3>
+<h3 style="font-size: 15px; margin: 20px 0 10px;">Visitors</h3>
 <table class="data-table">
     <thead><tr><th>Name</th><th>Status</th></tr></thead>
     <tbody>
@@ -29,7 +23,7 @@
         {
             <tr>
                 <td>@v.Name</td>
-                <td>@v.VisitorStatus</td>
+                <td><span class="badge badge-@v.VisitorStatus.ToLower()">@v.VisitorStatus</span></td>
             </tr>
         }
     </tbody>
