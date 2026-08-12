@@ -6,6 +6,7 @@
         public Department Department { get; set; }
         public EmployeeHost Host { get; set; }
         public VisitType VisitType { get; set; }
+        public string ManagerSignature { get; set; }
         public List<VisitDetailsVisitorRow> Visitors { get; set; }
     }
 }

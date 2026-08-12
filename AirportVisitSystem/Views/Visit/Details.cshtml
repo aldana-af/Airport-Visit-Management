@@ -13,6 +13,7 @@
     <div><span style="color: var(--color-text-faint);">Date</span><br /><span>@Model.Visit.VisitDate.ToShortDateString()</span></div>
     <div><span style="color: var(--color-text-faint);">Time</span><br /><span>@Model.Visit.StartTime – @Model.Visit.EndTime</span></div>
     <div><span style="color: var(--color-text-faint);">Status</span><br /><span class="badge badge-@Model.Visit.VisitStatus.ToLower()">@Model.Visit.VisitStatus</span></div>
+    <div><span style="color: var(--color-text-faint);">Manager Signature</span><br /><span>@Model.ManagerSignature</span></div>
 </div>
 
 <h3 style="font-size: 15px; margin: 20px 0 10px;">Visitors</h3>

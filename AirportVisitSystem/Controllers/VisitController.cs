@@ -9,14 +9,13 @@ using System.Security.Claims;
 public class VisitController : Controller
 {
     // home computer
-    private readonly AirportVisitDatabase1 _context;
-    // office computer
-    //private readonly AirportVisitDb _context;
+    //private readonly AirportVisitDatabase1 _context;
+    //public VisitController(AirportVisitDatabase1 context) => _context = context;
 
-    // home computer
-    public VisitController(AirportVisitDatabase1 context) => _context = context;
+
     // office computer
-    //public VisitController(AirportVisitDb context) => _context = context;
+    private readonly AirportVisitDb _context;
+    public VisitController(AirportVisitDb context) => _context = context;
 
 
     [Authorize(Roles = "Employee,Manager")]
@@ -56,6 +55,12 @@ public class VisitController : Controller
     {
         if (vm.SelectedVisitorIds == null || !vm.SelectedVisitorIds.Any())
             ModelState.AddModelError("SelectedVisitorIds", "Select at least one visitor.");
+
+        if (vm.StartTime < new TimeSpan(9, 0, 0) || vm.EndTime > new TimeSpan(17, 0, 0))
+            ModelState.AddModelError("StartTime", "Visits can only be scheduled between 9 AM and 5 PM.");
+
+        if (vm.EndTime <= vm.StartTime)
+            ModelState.AddModelError("EndTime", "Visit end time must be after start time.");
 
         if (!ModelState.IsValid)
         {
@@ -124,12 +129,26 @@ public class VisitController : Controller
         var visitorIds = visitVisitors.Select(vv => vv.VisitorID).ToList();
         var visitors = await _context.Visitors.Where(v => visitorIds.Contains(v.VisitorID)).ToListAsync();
 
+        var visitVisitorIds = visitVisitors.Select(vv => vv.VisitVisitorID).ToList();
+        var approvalWithManager = await _context.Approvals
+            .Where(a => visitVisitorIds.Contains(a.VisitVisitorID) && a.ApprovingManagerID != null)
+            .FirstOrDefaultAsync();
+
+        string managerSignature = "Pending";
+        if (approvalWithManager != null)
+        {
+            var manager = await _context.SiteVisitingManagers
+                .FirstOrDefaultAsync(m => m.ManagerID == approvalWithManager.ApprovingManagerID);
+            if (manager != null) managerSignature = manager.Name;
+        }
+
         var vm = new VisitDetailsViewModel
         {
             Visit = visit,
             Department = await _context.Departments.FirstAsync(d => d.DepartmentID == visit.DepartmentID),
             Host = await _context.EmployeeHosts.FirstAsync(e => e.EmployeeID == visit.HostEmployeeID),
             VisitType = await _context.VisitTypes.FirstAsync(t => t.VisitTypeID == visit.VisitTypeID),
+            ManagerSignature = managerSignature, // new
             Visitors = visitVisitors.Select(vv => new VisitDetailsVisitorRow
             {
                 VisitVisitorID = vv.VisitVisitorID,

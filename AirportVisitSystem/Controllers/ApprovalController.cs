@@ -9,14 +9,12 @@ using System.Security.Claims;
 public class ApprovalController : Controller
 {
     // home computer
-    private readonly AirportVisitDatabase1 _context;
-    // office computer
-    //private readonly AirportVisitDb _context;
+    //private readonly AirportVisitDatabase1 _context;
+    //public ApprovalController(AirportVisitDatabase1 context) => _context = context;
 
-    //home computer
-   public ApprovalController(AirportVisitDatabase1 context) => _context = context;
-    //office computer
-    //public ApprovalController(AirportVisitDb context) => _context = context;
+    // office computer
+    private readonly AirportVisitDb _context;
+    public ApprovalController(AirportVisitDb context) => _context = context;
 
     public async Task<IActionResult> Index(string searchTerm)
     {
@@ -126,7 +124,7 @@ public class ApprovalController : Controller
         }
 
         var visit = await _context.Visits.FirstAsync(v => v.VisitID == visitId);
-        visit.VisitStatus = anyAllowed ? "Approved" : "Rejected";
+        visit.VisitStatus = anyAllowed ? "Approved" : "Denied"; //"Rejected";
 
         await _context.SaveChangesAsync();
         return RedirectToAction("Index");

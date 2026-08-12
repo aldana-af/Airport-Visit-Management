@@ -156,3 +156,26 @@ BEGIN
 	VALUES (@ManagerID, @Name, @Phone, @Email, @FoundLoginID);
 END;
 GO
+
+--------------Checking for Check constraints in Approval table----------------------------
+SELECT cc.name AS ConstraintName, cc.definition
+FROM sys.check_constraints cc
+JOIN sys.tables t ON cc.parent_object_id = t.object_id
+WHERE t.name = 'Approval';
+
+-------------------------------------ALTER TABLE--------------------------------------
+ALTER TABLE Visit ADD CONSTRAINT CHK_Visit_WorkHours
+CHECK (StartTime >= '8:00:00' AND EndTime <= '17:00:00');
+
+ALTER TABLE Visit ADD CONSTRAINT CHK_Visit_TimeOrder
+CHECK (EndTime > StartTime);
+
+--------------------------ALTER CONSTRAINT-----------------------------------
+previous constraint needed to be fixed to be from 9am - 5pm
+drop the constraint then redo it
+
+ALTER TABLE Visit
+DROP CONSTRAINT CHK_Visit_WorkHours;
+
+ALTER TABLE Visit ADD CONSTRAINT CHK_Visit_WorkHours
+CHECK (StartTime >= '9:00:00' AND EndTime <= '17:00:00');
