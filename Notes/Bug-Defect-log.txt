@@ -1,0 +1,57 @@
+BUG 1:
+Exception: System.InvalidOperationException thrown because EF Core says entity type 'EmployeeHost' has no primary key.
+Where it fails: when executing _context.EmployeeHosts.Any(...) in AccountController — EF builds the model and validates keys before translating the query.
+Cause: EmployeeHost class defines EmployeeID but EF conventions did not pick it up as a key (EF looks for Id or EmployeeHostId by convention). OnModelCreating maps the entity to the table but does not define a key.
+Evidence (from project)
+EmployeeHost model:
+public class EmployeeHost
+{
+    public int EmployeeID { get; set; }
+    public string Name { get; set; }
+    // ...
+    public int LoginID { get; set; }
+}
+
+DbContext mapping does not set a key:
+modelBuilder.Entity<EmployeeHost>().ToTable("EmployeeHost");
+
+BUG 2:
+
+Exception: Microsoft.Data.SqlClient.SqlException "Invalid object name 'Logins'." thrown at _context.Logins.FirstOrDefault(...) in AccountController.Login.
+Meaning: SQL Server cannot find a table (or view) named Logins in the database the app is connected to.
+Likely root causes
+Wrong database connection string (app is connected to a different DB, e.g., master or a dev DB without the schema).
+Migrations/database initialization not applied — the Logins table was never created.
+Table name or schema mismatch (EF model maps to a different name or schema, or the real table is singular "Login").
+Running against a case-sensitive database with different casing (rare for SQL Server).
+Using the wrong DbContext instance or database provider.
+
+FIXED WITH:
+ "DefaultConnection": "Server=(localdb)\\MSSQLLocalDB;Database=AirportVisitDb;Trusted_Connection=True;TrustServerCertificate=True;"
+
+in appSettings.json
+
+BUG 3:
+System crash when approving one visitor to a visit. This worked on my home computer but wont in the office computer.
+Microsoft.EntityFrameworkCore.DbUpdateException: 'An error occurred while saving the entity changes. See the inner exception for details.'
+Inner Exception
+SqlException: The UPDATE statement conflicted with the CHECK constraint "CK__VisitVisi__Visit__73852659". The conflict occurred in database "AirportVisitDb", table "dbo.VisitVisitor", column 'VisitorStatus'.
+
+FIXED WITH:
+Constraint on VisitorStatus had a CHECK clause and the data being sent to VisitorStatus did not match. Had to switch the 'Rejected' to 'Denied' in in VisitVisitor table to match the input given from Approval table.
+ALTER TABLE VisitVisitor DROP CONSTRAINT CK__VisitVisi__Visit__73852659;
+
+ALTER TABLE VisitVisitor ADD CONSTRAINT CHK_VisitVisitor_VisitorStatus
+    CHECK (VisitorStatus IN ('Allowed', 'Denied', 'Pending'));
+
+BUG 4:
+
+Visit request not going through OR attributes set to 
+NOT NULL that needed to be changed to NULL (badgeid, checkin, approvingmanagerid)????/
+
+FIXED WITH:
+
+All attributes set to null (sql queries probably saved somewhere in repo)
+
+BUG ? :
+Approving only one visitor and denying another to a requested visit causes does not work.

@@ -3,6 +3,8 @@
     Layout = "_AppLayout";
 }
 
+<a asp-action="Index" asp-controller="Visit" class="btn btn-secondary">Back</a>
+
 <h2>@Model.Visit.VisitTitle</h2>
 <p style="color: var(--color-text-muted); font-size: 14px;">@Model.Visit.VisitDescription</p>
 
@@ -10,21 +12,27 @@
     <div><span style="color: var(--color-text-faint);">Type</span><br /><span>@Model.VisitType.Type</span></div>
     <div><span style="color: var(--color-text-faint);">Department</span><br /><span>@Model.Department.DepartmentName</span></div>
     <div><span style="color: var(--color-text-faint);">Host</span><br /><span>@Model.Host.Name</span></div>
-    <div><span style="color: var(--color-text-faint);">Date</span><br /><span>@Model.Visit.VisitDate.ToShortDateString()</span></div>
-    <div><span style="color: var(--color-text-faint);">Time</span><br /><span>@Model.Visit.StartTime – @Model.Visit.EndTime</span></div>
-    <div><span style="color: var(--color-text-faint);">Status</span><br /><span class="badge badge-@Model.Visit.VisitStatus.ToLower()">@Model.Visit.VisitStatus</span></div>
     <div><span style="color: var(--color-text-faint);">Manager Signature</span><br /><span>@Model.ManagerSignature</span></div>
+</div>
+
+<div style="display: flex; gap: 28px; margin: 18px 0; font-size: 13px;">
+<div><span style="color: var(--color-text-faint);">Date</span><br /><span>@Model.Visit.VisitDate.ToShortDateString()</span></div>
+<div><span style="color: var(--color-text-faint);">Time</span><br /><span>@Model.Visit.StartTime – @Model.Visit.EndTime</span></div>
+<div><span style="color: var(--color-text-faint);">Status</span><br /><span class="badge badge-@Model.Visit.VisitStatus.ToLower()">@Model.Visit.VisitStatus</span></div>
 </div>
 
 <h3 style="font-size: 15px; margin: 20px 0 10px;">Visitors</h3>
 <table class="data-table">
-    <thead><tr><th>Name</th><th>Status</th></tr></thead>
+    <thead><tr><th>Name</th><th>Status</th><th>Badge</th><th>Check-in</th><th>Check-out</th></tr></thead>
     <tbody>
         @foreach (var v in Model.Visitors)
         {
             <tr>
                 <td>@v.Name</td>
                 <td><span class="badge badge-@v.VisitorStatus.ToLower()">@v.VisitorStatus</span></td>
+                <td>@(v.BadgeNumber ?? "—")</td>
+                <td>@(v.CheckIn?.ToString("g") ?? "—")</td>
+                <td>@(v.CheckOut?.ToString("g") ?? "—")</td>
             </tr>
         }
     </tbody>

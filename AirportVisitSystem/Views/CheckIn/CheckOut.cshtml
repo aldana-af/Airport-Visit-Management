@@ -1,0 +1,21 @@
+﻿@model CheckOutViewModel
+@{
+    ViewData["Title"] = "Check-out";
+    Layout = "_AppLayout";
+}
+
+<h2>Check out — @Model.VisitTitle</h2>
+<p style="color: var(--color-text-muted); font-size: 13px;">Time: @Model.CurrentTime.ToString("g")</p>
+
+<ul>
+    @foreach (var name in Model.VisitorNames)
+    {
+        <li>@name</li>
+    }
+</ul>
+
+<form asp-action="ConfirmCheckOut" method="post" style="margin-top: 16px;">
+    <input type="hidden" name="visitId" value="@Model.VisitID" />
+    <button type="submit" class="btn btn-primary">Confirm check-out</button>
+    <a class="btn btn-secondary" asp-controller="Home" asp-action="Employee">Cancel</a>
+</form>

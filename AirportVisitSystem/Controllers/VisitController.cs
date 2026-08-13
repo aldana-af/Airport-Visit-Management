@@ -134,6 +134,9 @@ public class VisitController : Controller
             .Where(a => visitVisitorIds.Contains(a.VisitVisitorID) && a.ApprovingManagerID != null)
             .FirstOrDefaultAsync();
 
+        var badgeIds = visitVisitors.Where(vv => vv.BadgeID.HasValue).Select(vv => vv.BadgeID.Value).ToList();
+        var badges = await _context.Badges.Where(b => badgeIds.Contains(b.BadgeID)).ToListAsync();
+
         string managerSignature = "Pending";
         if (approvalWithManager != null)
         {
@@ -149,11 +152,15 @@ public class VisitController : Controller
             Host = await _context.EmployeeHosts.FirstAsync(e => e.EmployeeID == visit.HostEmployeeID),
             VisitType = await _context.VisitTypes.FirstAsync(t => t.VisitTypeID == visit.VisitTypeID),
             ManagerSignature = managerSignature, // new
+
             Visitors = visitVisitors.Select(vv => new VisitDetailsVisitorRow
             {
                 VisitVisitorID = vv.VisitVisitorID,
                 Name = visitors.First(v => v.VisitorID == vv.VisitorID).Name,
-                VisitorStatus = vv.VisitorStatus
+                VisitorStatus = vv.VisitorStatus,
+                BadgeNumber = vv.BadgeID.HasValue ? badges.FirstOrDefault(b => b.BadgeID == vv.BadgeID)?.BadgeNumber : null,
+                CheckIn = vv.CheckIn,
+                CheckOut = vv.CheckOut
             }).ToList()
         };
 

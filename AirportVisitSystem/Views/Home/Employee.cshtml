@@ -1,24 +1,59 @@
-﻿@model List<Visit>
+﻿@model EmployeeHomeViewModel
 @{
     ViewData["Title"] = "Employee Home";
     Layout = "_AppLayout";
 }
 
-<h2>Upcoming visits</h2>
+<h2>Today's visits</h2>
+@if (!Model.TodaysVisits.Any())
+{
+    <p style="color: var(--color-text-muted); font-size: 13px;">No visits scheduled for today.</p>
+}
+else
+{
+    <table class="data-table">
+        <thead><tr><th>Title</th><th>Status</th><th></th></tr></thead>
+        <tbody>
+            @foreach (var row in Model.TodaysVisits)
+            {
+                <tr>
+                    <td>@row.Visit.VisitTitle</td>
+                    <td><span class="badge badge-@row.Visit.VisitStatus.ToLower()">@row.Visit.VisitStatus</span></td>
+                    <td>
+                        @if (row.ActionType == "CheckIn")
+                        {
+                            <a class="btn btn-primary" asp-controller="CheckIn" asp-action="CheckIn" asp-route-visitId="@row.Visit.VisitID">Check-in</a>
+                        }
+                        else if (row.ActionType == "CheckOut")
+                        {
+                            <a class="btn btn-secondary" asp-controller="CheckIn" asp-action="CheckOut" asp-route-visitId="@row.Visit.VisitID">Check-out</a>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
 
-<table class="data-table">
-    <thead>
-        <tr><th>Title</th><th>Date</th><th>Status</th><th></th></tr>
-    </thead>
-    <tbody>
-        @foreach (var visit in Model)
-        {
-            <tr>
-                <td>@visit.VisitTitle</td>
-                <td>@visit.VisitDate.ToShortDateString()</td>
-                <td><span class="badge badge-@visit.VisitStatus.ToLower()">@visit.VisitStatus</span></td>
-                <td><a asp-controller="Visit" asp-action="Details" asp-route-id="@visit.VisitID">View details</a></td>
-            </tr>
-        }
-    </tbody>
-</table>
+<h2 style="margin-top: 28px;">Upcoming visits</h2>
+@if (!Model.UpcomingVisits.Any())
+{
+    <p style="color: var(--color-text-muted); font-size: 13px;">No upcoming visits registered.</p>
+}
+else
+{
+    <table class="data-table">
+        <thead><tr><th>Title</th><th>Date</th><th>Status</th><th></th></tr></thead>
+        <tbody>
+            @foreach (var visit in Model.UpcomingVisits)
+            {
+                <tr>
+                    <td>@visit.VisitTitle</td>
+                    <td>@visit.VisitDate.ToShortDateString()</td>
+                    <td><span class="badge badge-@visit.VisitStatus.ToLower()">@visit.VisitStatus</span></td>
+                    <td><a asp-controller="Visit" asp-action="Details" asp-route-id="@visit.VisitID">View details</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

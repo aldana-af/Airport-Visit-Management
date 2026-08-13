@@ -1,0 +1,2 @@
+--------------------------Fix 1 ---------------------------
+Page titles in :Visit, Visitors, Visit Details, Add Visitor, Add Visit

@@ -1,0 +1,27 @@
+﻿@model CheckInViewModel
+@{
+    ViewData["Title"] = "Check-in";
+    Layout = "_AppLayout";
+}
+
+<h2>Check in — @Model.VisitTitle</h2>
+<p style="color: var(--color-text-muted); font-size: 13px;">Time: @Model.CurrentTime.ToString("g")</p>
+
+<table class="data-table">
+    <thead><tr><th>Name</th><th>Assigned badge</th></tr></thead>
+    <tbody>
+        @foreach (var v in Model.Visitors)
+        {
+            <tr>
+                <td>@v.Name</td>
+                <td>@v.TentativeBadgeNumber</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<form asp-action="ConfirmCheckIn" method="post" style="margin-top: 16px;">
+    <input type="hidden" name="visitId" value="@Model.VisitID" />
+    <button type="submit" class="btn btn-primary">Confirm check-in</button>
+    <a class="btn btn-secondary" asp-controller="Home" asp-action="Employee">Cancel</a>
+</form>

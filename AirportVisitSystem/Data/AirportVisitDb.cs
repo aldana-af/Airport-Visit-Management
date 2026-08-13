@@ -19,6 +19,8 @@ namespace AirportVisitSystem.Data
         public DbSet<VisitVisitor> VisitVisitors { get; set; }
         public DbSet<Approval> Approvals { get; set; }
 
+        public DbSet<Badge> Badges { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Logins>().ToTable("Logins").HasKey(l => l.LoginID);
@@ -30,6 +32,7 @@ namespace AirportVisitSystem.Data
             modelBuilder.Entity<Visit>().ToTable("Visit");
             modelBuilder.Entity<VisitVisitor>().ToTable("VisitVisitor");
             modelBuilder.Entity<Approval>().ToTable("Approval");
+            modelBuilder.Entity<Badge>().ToTable("Badge"); 
         }
     }
 }

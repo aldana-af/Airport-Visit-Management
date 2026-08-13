@@ -1,4 +1,5 @@
 using AirportVisitSystem.Data;
+using AirportVisitSystem.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -23,12 +24,40 @@ public class HomeController : Controller
         ViewData["Greeting"] = $"Welcome, {employee.Name}";
         ViewData["Role"] = "Employee";
 
+        var todaysVisits = await _context.Visits
+            .Where(v => v.HostEmployeeID == employee.EmployeeID
+                     && v.VisitDate == DateTime.Today
+                     && v.VisitStatus == "Approved")
+            .ToListAsync();
+
         var upcomingVisits = await _context.Visits
-            .Where(v => v.HostEmployeeID == employee.EmployeeID && v.VisitDate >= DateTime.Today)
+            .Where(v => v.HostEmployeeID == employee.EmployeeID && v.VisitDate > DateTime.Today)
             .OrderBy(v => v.VisitDate)
             .ToListAsync();
 
-        return View(upcomingVisits);
+        var vm = new EmployeeHomeViewModel
+        {
+            TodaysVisits = new List<TodayVisitRow>(),
+            UpcomingVisits = upcomingVisits
+        };
+
+        foreach (var visit in todaysVisits)
+        {
+            var visitVisitors = await _context.VisitVisitors
+                .Where(vv => vv.VisitID == visit.VisitID && vv.VisitorStatus == "Allowed")
+                .ToListAsync();
+
+            bool hasUncheckedIn = visitVisitors.Any(vv => vv.CheckIn == null);
+            bool hasUncheckedOut = visitVisitors.Any(vv => vv.CheckIn != null && vv.CheckOut == null);
+
+            vm.TodaysVisits.Add(new TodayVisitRow
+            {
+                Visit = visit,
+                ActionType = hasUncheckedIn ? "CheckIn" : (hasUncheckedOut ? "CheckOut" : "None")
+            });
+        }
+
+        return View(vm);
     }
 
     [Authorize(Roles = "Manager")]
