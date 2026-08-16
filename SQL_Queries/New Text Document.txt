@@ -1,0 +1,27 @@
+-- Step 3: Add EmployeeFormUserId link columns
+-- Run this against whichever AVS database you're actively using
+-- (AirportVisitDb on office computer, AirportVisitDatabase1 on home computer).
+--
+-- Nullable + additive: safe to run without touching existing data.
+-- Name/Email/Role/LoginID and the Logins table are intentionally left
+-- alone here — those get removed in a later cleanup migration once
+-- AccountController and the registration flows no longer read them
+-- (see steps 4 and 5).
+
+ALTER TABLE EmployeeHost
+ADD EmployeeFormUserId INT NULL;
+
+ALTER TABLE SiteVisitingManager
+ADD EmployeeFormUserId INT NULL;
+
+-- Optional but recommended: prevents two Airport records from
+-- accidentally linking to the same EmployeeForm user, once every
+-- row does have a value. Safe to add now — NULLs don't violate
+-- uniqueness in SQL Server.
+CREATE UNIQUE INDEX UX_EmployeeHost_EmployeeFormUserId
+    ON EmployeeHost(EmployeeFormUserId)
+    WHERE EmployeeFormUserId IS NOT NULL;
+
+CREATE UNIQUE INDEX UX_SiteVisitingManager_EmployeeFormUserId
+    ON SiteVisitingManager(EmployeeFormUserId)
+    WHERE EmployeeFormUserId IS NOT NULL;

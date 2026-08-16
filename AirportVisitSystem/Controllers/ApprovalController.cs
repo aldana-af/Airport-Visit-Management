@@ -157,7 +157,7 @@ public class ApprovalController : Controller
 
     private async Task<SiteVisitingManager> GetCurrentManager()
     {
-        int loginId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-        return await _context.SiteVisitingManagers.FirstAsync(m => m.ManagerLoginID == loginId);
+        int employeeFormUserId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+        return await _context.SiteVisitingManagers.FirstAsync(m => m.EmployeeFormUserId == employeeFormUserId);
     }
 }

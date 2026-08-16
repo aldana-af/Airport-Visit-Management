@@ -71,8 +71,8 @@ public class VisitController : Controller
             return View(vm);
         }
 
-        int loginId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-        var employee = _context.EmployeeHosts.First(e => e.LoginID == loginId);
+        int employeeFormUserId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+        var employee = _context.EmployeeHosts.First(e => e.EmployeeFormUserId == employeeFormUserId);
 
         var visit = new Visit
         {

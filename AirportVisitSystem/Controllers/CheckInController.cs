@@ -18,8 +18,8 @@ public class CheckInController : Controller
 
     private async Task<EmployeeHost> GetCurrentEmployee()
     {
-        int loginId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-        return await _context.EmployeeHosts.FirstAsync(e => e.LoginID == loginId);
+        int employeeFormUserId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+        return await _context.EmployeeHosts.FirstAsync(e => e.EmployeeFormUserId == employeeFormUserId);
     }
 
     [HttpGet]

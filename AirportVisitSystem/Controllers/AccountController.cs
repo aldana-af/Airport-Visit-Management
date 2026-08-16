@@ -1,8 +1,8 @@
 ﻿using AirportVisitSystem.Data;
 using AirportVisitSystem.Models;
+using AirportVisitSystem.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -10,13 +10,21 @@ public class AccountController : Controller
 {
     // home computer
     //private readonly AirportVisitDatabase1 _context;
-    //public AccountController(AirportVisitDatabase1 context) => _context = context;
+    //public AccountController(AirportVisitDatabase1 context, IEmployeeFormApiClient employeeFormApiClient)
+    //{
+    //    _context = context;
+    //    _employeeFormApiClient = employeeFormApiClient;
+    //}
 
     // office computer
     private readonly AirportVisitDb _context;
-    public AccountController(AirportVisitDb context) => _context = context;
+    private readonly IEmployeeFormApiClient _employeeFormApiClient;
 
-    private readonly PasswordHasher<object> _hasher = new();
+    public AccountController(AirportVisitDb context, IEmployeeFormApiClient employeeFormApiClient)
+    {
+        _context = context;
+        _employeeFormApiClient = employeeFormApiClient;
+    }
 
     [HttpGet]
     public IActionResult Login() => View();
@@ -26,20 +34,35 @@ public class AccountController : Controller
     {
         if (!ModelState.IsValid) return View(model);
 
-        var login = _context.Logins.FirstOrDefault(l => l.Username == model.Username);
-        if (login == null || login.PasswordHash != model.Password)
+        // Credentials are verified against EmployeeForm now — Airport no
+        // longer stores or checks passwords itself. See EmployeeForm's
+        // POST /api/auth/verify (EmployeeApiController).
+        var authResult = await _employeeFormApiClient.VerifyLoginAsync(model.Username, model.Password);
+
+        if (!authResult.Success || authResult.Id == null)
         {
             ModelState.AddModelError("", "Invalid username or password.");
             return View(model);
         }
 
-        bool isEmployee = _context.EmployeeHosts.Any(e => e.LoginID == login.LoginID);
-        bool isManager = _context.SiteVisitingManagers.Any(m => m.ManagerLoginID == login.LoginID);
+        int employeeFormUserId = authResult.Id.Value;
+
+        // Being a valid EmployeeForm login isn't enough by itself — the
+        // person also has to already be registered as an EmployeeHost
+        // and/or SiteVisitingManager here in Airport (see step 5's
+        // registration flow, which links new rows by EmployeeFormUserId).
+        bool isEmployee = _context.EmployeeHosts.Any(e => e.EmployeeFormUserId == employeeFormUserId);
+        bool isManager = _context.SiteVisitingManagers.Any(m => m.EmployeeFormUserId == employeeFormUserId);
 
         var claims = new List<Claim>
         {
-            new Claim(ClaimTypes.NameIdentifier, login.LoginID.ToString()),
-            new Claim(ClaimTypes.Name, login.Username)
+            // NOTE: this now carries EmployeeFormUserId, not the old Airport
+            // LoginID. Every controller that reads ClaimTypes.NameIdentifier
+            // to look up the current EmployeeHost/SiteVisitingManager must
+            // match against EmployeeFormUserId too (already updated —
+            // see ApprovalController, CheckInController, HomeController, VisitController).
+            new Claim(ClaimTypes.NameIdentifier, employeeFormUserId.ToString()),
+            new Claim(ClaimTypes.Name, model.Username)
         };
         if (isEmployee) claims.Add(new Claim(ClaimTypes.Role, "Employee"));
         if (isManager) claims.Add(new Claim(ClaimTypes.Role, "Manager"));
@@ -53,7 +76,7 @@ public class AccountController : Controller
         if (isManager) return RedirectToAction("Index", "Approval", new { area = "Manager" });
         if (isEmployee) return RedirectToAction("Index", "Visit", new { area = "Employee" });
 
-        ModelState.AddModelError("", "This login isn't linked to an Employee or Manager record.");
+        ModelState.AddModelError("", "This EmployeeForm account isn't linked to an Employee or Manager record in Airport yet.");
         return View(model);
     }
 
@@ -68,4 +91,3 @@ public class AccountController : Controller
 
     public IActionResult AccessDenied() => View();
 }
-

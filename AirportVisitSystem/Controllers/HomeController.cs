@@ -18,8 +18,8 @@ public class HomeController : Controller
     [Authorize(Roles = "Employee")]
     public async Task<IActionResult> Employee()
     {
-        int loginId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-        var employee = _context.EmployeeHosts.First(e => e.LoginID == loginId);
+        int employeeFormUserId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+        var employee = _context.EmployeeHosts.First(e => e.EmployeeFormUserId == employeeFormUserId);
 
         ViewData["Greeting"] = $"Welcome, {employee.Name}";
         ViewData["Role"] = "Employee";
@@ -63,8 +63,8 @@ public class HomeController : Controller
     [Authorize(Roles = "Manager")]
     public async Task<IActionResult> Manager()
     {
-        int loginId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-        var manager = _context.SiteVisitingManagers.First(m => m.ManagerLoginID == loginId);
+        int employeeFormUserId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+        var manager = _context.SiteVisitingManagers.First(m => m.EmployeeFormUserId == employeeFormUserId);
 
         ViewData["Greeting"] = $"Welcome, {manager.Name}";
         ViewData["Role"] = "Manager";
