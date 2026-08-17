@@ -8,6 +8,8 @@ using System.Security.Claims;
 
 public class AccountController : Controller
 {
+    private readonly IEmployeeFormApiClient _employeeFormApiClient;
+
     // home computer
     //private readonly AirportVisitDatabase1 _context;
     //public AccountController(AirportVisitDatabase1 context, IEmployeeFormApiClient employeeFormApiClient)
@@ -18,8 +20,6 @@ public class AccountController : Controller
 
     // office computer
     private readonly AirportVisitDb _context;
-    private readonly IEmployeeFormApiClient _employeeFormApiClient;
-
     public AccountController(AirportVisitDb context, IEmployeeFormApiClient employeeFormApiClient)
     {
         _context = context;
@@ -53,6 +53,7 @@ public class AccountController : Controller
         // registration flow, which links new rows by EmployeeFormUserId).
         bool isEmployee = _context.EmployeeHosts.Any(e => e.EmployeeFormUserId == employeeFormUserId);
         bool isManager = _context.SiteVisitingManagers.Any(m => m.EmployeeFormUserId == employeeFormUserId);
+        bool isAdmin = _context.AirportAdmins.Any(a => a.EmployeeFormUserId == employeeFormUserId);
 
         var claims = new List<Claim>
         {
@@ -66,17 +67,21 @@ public class AccountController : Controller
         };
         if (isEmployee) claims.Add(new Claim(ClaimTypes.Role, "Employee"));
         if (isManager) claims.Add(new Claim(ClaimTypes.Role, "Manager"));
+        if (isAdmin) claims.Add(new Claim(ClaimTypes.Role, "Admin"));
 
         var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
         await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
             new ClaimsPrincipal(identity));
 
-        // Overlap case: let them choose instead of guessing
-        if (isEmployee && isManager) return RedirectToAction("ChoosePortal");
+        // Overlap case: let them choose instead of guessing.
+        int roleCount = (isEmployee ? 1 : 0) + (isManager ? 1 : 0) + (isAdmin ? 1 : 0);
+
+        if (roleCount > 1) return RedirectToAction("ChoosePortal");
         if (isManager) return RedirectToAction("Index", "Approval", new { area = "Manager" });
         if (isEmployee) return RedirectToAction("Index", "Visit", new { area = "Employee" });
+        if (isAdmin) return RedirectToAction("RegisterEmployeeHost", "Admin");
 
-        ModelState.AddModelError("", "This EmployeeForm account isn't linked to an Employee or Manager record in Airport yet.");
+        ModelState.AddModelError("", "This EmployeeForm account isn't linked to an Employee, Manager, or Admin record in Airport yet.");
         return View(model);
     }
 

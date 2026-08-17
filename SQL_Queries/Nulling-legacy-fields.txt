@@ -1,0 +1,27 @@
+-- Step 5 fix: allow the legacy display fields to be NULL.
+-- Run against whichever AVS database you're actively using.
+--
+-- These columns predate the EmployeeForm integration and still have their
+-- original NOT NULL constraints. Since step 3 we decided NOT to populate
+-- them for new records (Name/Email/Role/Phone are live-fetched from
+-- EmployeeForm instead of cached locally) — but nobody told the database
+-- that, so AdminController's inserts were failing. This is the missing
+-- half of that schema change.
+
+ALTER TABLE EmployeeHost ALTER COLUMN Name NVARCHAR(100) NULL;
+ALTER TABLE EmployeeHost ALTER COLUMN Email NVARCHAR(100) NULL;
+ALTER TABLE EmployeeHost ALTER COLUMN Role NVARCHAR(50) NULL;
+ALTER TABLE EmployeeHost ALTER COLUMN Phone NVARCHAR(15) NULL;
+
+ALTER TABLE SiteVisitingManager ALTER COLUMN Name NVARCHAR(100) NULL;
+ALTER TABLE SiteVisitingManager ALTER COLUMN Email NVARCHAR(100) NULL;
+ALTER TABLE SiteVisitingManager ALTER COLUMN Phone NVARCHAR(15) NULL;
+
+-- NOTE: adjust the NVARCHAR lengths above if your actual columns use
+( note from me: i adjusted the lenghts to match)
+-- different sizes — ALTER COLUMN requires restating the existing type,
+-- and changing the length by accident would truncate future data.
+-- Quick way to check current lengths first:
+--   SELECT COLUMN_NAME, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH
+--   FROM INFORMATION_SCHEMA.COLUMNS
+--   WHERE TABLE_NAME IN ('EmployeeHost', 'SiteVisitingManager');

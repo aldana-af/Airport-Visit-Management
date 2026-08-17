@@ -3,13 +3,25 @@
 }
 
 <div class="choose-portal-container">
-    <h2>You have access to both portals</h2>
+    <h2>You have access to multiple portals</h2>
     <p>Which would you like to enter?</p>
 
-    <a class="btn btn-primary" asp-area="Employee" asp-controller="Visit" asp-action="Index">
-        Employee Portal
-    </a>
-    <a class="btn btn-primary" asp-area="Manager" asp-controller="Approval" asp-action="Index">
-        Manager Portal
-    </a>
+    @if (User.IsInRole("Employee"))
+    {
+        <a class="btn btn-primary" asp-area="Employee" asp-controller="Visit" asp-action="Index">
+            Employee Portal
+        </a>
+    }
+    @if (User.IsInRole("Manager"))
+    {
+        <a class="btn btn-primary" asp-area="Manager" asp-controller="Approval" asp-action="Index">
+            Manager Portal
+        </a>
+    }
+    @if (User.IsInRole("Admin"))
+    {
+        <a class="btn btn-primary" asp-controller="Admin" asp-action="RegisterEmployeeHost">
+            Admin Portal
+        </a>
+    }
 </div>

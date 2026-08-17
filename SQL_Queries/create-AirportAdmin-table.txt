@@ -1,0 +1,21 @@
+-- Step 5: Admin role table
+-- Run against whichever AVS database you're actively using.
+--
+-- Mirrors EmployeeHost/SiteVisitingManager: Admin is an AVS-specific
+-- designation, linked back to EmployeeForm by EmployeeFormUserId.
+-- Being an Admin in EmployeeForm does NOT automatically grant this.
+
+CREATE TABLE AirportAdmin (
+    AdminID INT IDENTITY(1,1) PRIMARY KEY,
+    EmployeeFormUserId INT NOT NULL
+);
+
+CREATE UNIQUE INDEX UX_AirportAdmin_EmployeeFormUserId
+    ON AirportAdmin(EmployeeFormUserId);
+
+-- Bootstrap: there's no registration UI yet to create the very first Admin
+-- (that's exactly what this table is for), so seed one manually.
+-- Replace 1 with the real EmployeeForm Users.Id of whoever should be
+-- Airport's first Admin (e.g. Aldana's EmployeeForm Id, confirmed as 1
+-- from earlier API testing).
+INSERT INTO AirportAdmin (EmployeeFormUserId) VALUES (1);

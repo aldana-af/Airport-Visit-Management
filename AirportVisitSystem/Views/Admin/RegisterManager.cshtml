@@ -1,0 +1,28 @@
+﻿@model AirportVisitSystem.Models.RegisterManagerViewModel
+@{
+    ViewData["Title"] = "Register Manager";
+}
+
+<h2>Register a new Site Visiting Manager</h2>
+<p class="text-muted">The person must already be registered in EmployeeForm. Enter either their username or badge ID.</p>
+
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-success">@TempData["Message"]</div>
+}
+
+<div asp-validation-summary="All" class="text-danger"></div>
+
+<form asp-action="RegisterManager" method="post">
+    <div class="form-group mb-3">
+        <label asp-for="Username"></label>
+        <input asp-for="Username" class="form-control" placeholder="EmployeeForm username" />
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="EmployeeId"></label>
+        <input asp-for="EmployeeId" class="form-control" placeholder="employee ID" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Register</button>
+</form>

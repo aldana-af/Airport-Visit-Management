@@ -48,8 +48,8 @@ namespace AirportVisitSystem.Services
         public Task<EmployeeFormProfile> LookupByUsernameAsync(string username)
             => LookupAsync($"api/employees/lookup?username={Uri.EscapeDataString(username)}");
 
-        public Task<EmployeeFormProfile> LookupByBadgeIdAsync(string badgeId)
-            => LookupAsync($"api/employees/lookup?badgeId={Uri.EscapeDataString(badgeId)}");
+        public Task<EmployeeFormProfile> LookupByEmployeeIdAsync(string employeeId)
+            => LookupAsync($"api/employees/lookup?employeeId={Uri.EscapeDataString(employeeId)}");
 
         private async Task<EmployeeFormProfile> LookupAsync(string relativeUrl)
         {

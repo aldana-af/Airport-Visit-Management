@@ -1,0 +1,39 @@
+﻿@model AirportVisitSystem.Models.RegisterEmployeeHostViewModel
+@{
+    ViewData["Title"] = "Register Employee";
+}
+
+<h2>Register a new EmployeeHost</h2>
+<p class="text-muted">The person must already be registered in EmployeeForm. Enter either their username or badge ID.</p>
+
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-success">@TempData["Message"]</div>
+}
+
+<div asp-validation-summary="All" class="text-danger"></div>
+
+<form asp-action="RegisterEmployeeHost" method="post">
+    <div class="form-group mb-3">
+        <label asp-for="Username"></label>
+        <input asp-for="Username" class="form-control" placeholder="EmployeeForm username" />
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="EmployeeId"></label>
+        <input asp-for="EmployeeId" class="form-control" placeholder="or employee ID" />
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="DepartmentID"></label>
+        <select asp-for="DepartmentID" class="form-control">
+            <option value="">-- Select department --</option>
+            @foreach (var dept in (List<AirportVisitSystem.Models.Department>)ViewBag.Departments)
+            {
+                <option value="@dept.DepartmentID">@dept.DepartmentName</option>
+            }
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Register</button>
+</form>

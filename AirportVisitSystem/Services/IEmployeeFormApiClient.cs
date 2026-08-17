@@ -17,7 +17,7 @@ namespace AirportVisitSystem.Services
         // exists in EmployeeForm. Returns null if no match (404).
         Task<EmployeeFormProfile> LookupByUsernameAsync(string username);
 
-        // Same lookup, by badge ID instead of username.
-        Task<EmployeeFormProfile> LookupByBadgeIdAsync(string badgeId);
+        // Same lookup, by employee ID instead of username.
+        Task<EmployeeFormProfile> LookupByEmployeeIdAsync(string employeeId);
     }
 }
