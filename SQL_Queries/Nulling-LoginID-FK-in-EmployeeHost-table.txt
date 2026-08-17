@@ -1,0 +1,38 @@
+error when i try to register exisitgn employee as host 
+Microsoft.EntityFrameworkCore.DbUpdateException: 'An error occurred while saving the entity changes. See the inner exception for details.'
+Inner Exception
+SqlException: The INSERT statement conflicted with the FOREIGN KEY constraint "FK_Employee_LoginID". The conflict occurred in database "AirportVisitDb", table "dbo.Logins", column 'LoginID'.
+The statement has been terminated.
+
+this error is is AdminController, line 103 "await _context.SaveChangesAsync();", in RegisterEmployeeHost
+this happends because the LoginID foreign key in EmployeeHost table does not find a reference
+to the Logins table.
+that is why when i register a new employee host or manager i want to first insert their info into the Logins table,
+that info is 
+1. the LoginID that is incremented from the last record
+2. the username (its already entered)
+3. password (hashed password taken from EmployeeForm) 
+4. role --> 'Employee' or 'Manager' (determined by which action is called)
+
+
+The real fix — make LoginID nullable, not populated. A NULL foreign key value is always valid in SQL Server regardless of what's in the parent table — the FK constraint only checks non-null values. So instead of inventing fake Logins rows, we just stop requiring a value at all:
+
+sql
+ALTER TABLE EmployeeHost ALTER COLUMN LoginID INT NULL;
+ALTER TABLE SiteVisitingManager ALTER COLUMN ManagerLoginID INT NULL;
+
+Then, matching the pattern we used for Name/Email/Role earlier — mark the C# properties nullable too:
+
+EmployeeHost.cs:
+
+csharp
+public int? LoginID { get; set; } // Foreign key to Logins table
+
+SiteVisitingManager.cs:
+
+csharp
+public int? ManagerLoginID { get; set; } // Foreign key to Logins table
+
+No AdminController.cs changes needed — since you never set LoginID there, EF will now correctly send NULL instead of defaulting to 0, and the insert will go through cleanly.
+
+Want me to check SiteVisitingManager actually has the same FK setup before you run this (in case it's structured differently), or are you confident it mirrors EmployeeHost?

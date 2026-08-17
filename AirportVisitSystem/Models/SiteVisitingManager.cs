@@ -10,7 +10,7 @@
 
         public string? Email { get; set; }
 
-        public int ManagerLoginID { get; set; } // Foreign key to Logins table
+        public int? ManagerLoginID { get; set; } // Foreign key to Logins table
 
         // Links this manager to their authoritative record in EmployeeForm.
         // See the matching note in EmployeeHost.cs.

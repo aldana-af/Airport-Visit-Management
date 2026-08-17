@@ -10,7 +10,6 @@ namespace AirportVisitSystem.Models
     {
         public string Username { get; set; }
 
-        // not to be confused with BadgeID which is used for visitors access badges
         public string EmployeeId { get; set; }
 
         [Required(ErrorMessage = "Department is required.")]

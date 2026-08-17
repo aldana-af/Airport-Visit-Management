@@ -73,13 +73,27 @@ namespace AirportVisitSystem.Controllers
                 return View(model);
             }
 
+            if (!int.TryParse(profile.EmployeeId, out int employeeId))
+            {
+                ModelState.AddModelError("", $"EmployeeForm's employee ID for {profile.Name} ('{profile.EmployeeId}') isn't a valid number and can't be used as the AVS record ID.");
+                return View(model);
+            }
+
+            if (_context.EmployeeHosts.Any(e => e.EmployeeID == employeeId))
+            {
+                ModelState.AddModelError("", $"An EmployeeHost record already exists with ID {employeeId}, but for a different person. This ID can't be reused.");
+                return View(model);
+            }
+
             var employeeHost = new EmployeeHost
             {
                 DepartmentID = model.DepartmentID,
                 EmployeeFormUserId = profile.Id,
-                // Use the authoritative badge id from EmployeeForm's profile
-                // and parse it to an int. "int(x)" is not valid C#.
-                EmployeeID = int.Parse(profile.EmployeeId)
+                // Uses EmployeeForm's EmployeeId directly as Airport's own
+                // EmployeeID (a deliberate choice to keep one shared
+                // identifier across both systems, rather than a separate
+                // Airport-only surrogate key).
+                EmployeeID = employeeId
                 // Name/Email/Role/LoginID intentionally left unset — this
                 // data is live-fetched from EmployeeForm going forward,
                 // not cached locally (see step 3's schema notes).
@@ -125,8 +139,13 @@ namespace AirportVisitSystem.Controllers
                 return View(model);
             }
 
+            // fix 
+            int nextManagerId = _context.SiteVisitingManagers.Any()
+                ? _context.SiteVisitingManagers.Max(m => m.ManagerID) + 1: 1;
+
             var manager = new SiteVisitingManager
             {
+                ManagerID = nextManagerId,
                 EmployeeFormUserId = profile.Id
             };
 

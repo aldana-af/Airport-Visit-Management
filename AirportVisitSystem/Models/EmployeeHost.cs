@@ -17,7 +17,7 @@ namespace AirportVisitSystem.Models
 
         public string? Role { get; set; } 
 
-        public int LoginID { get; set; } // Foreign key to Logins table
+        public int? LoginID { get; set; } // Foreign key to Logins table
 
         // Links this EmployeeHost to their authoritative record in EmployeeForm.
         // Nullable for now so existing rows aren't broken — every NEW

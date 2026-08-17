@@ -10,11 +10,13 @@ builder.Services.AddControllersWithViews();
 
 // database context setup (office computer)
 builder.Services.AddDbContext<AirportVisitDb>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),
+        sqlOptions => sqlOptions.EnableRetryOnFailure(maxRetryCount: 5, maxRetryDelay: TimeSpan.FromSeconds(10), errorNumbersToAdd: null)));
 
 // database context setup (home computer)
 builder.Services.AddDbContext<AirportVisitDatabase1>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),
+        sqlOptions => sqlOptions.EnableRetryOnFailure(maxRetryCount: 5, maxRetryDelay: TimeSpan.FromSeconds(10), errorNumbersToAdd: null)));
 
 // EmployeeForm API client (typed HttpClient) — one place that knows
 // EmployeeForm's base URL and API key. AccountController and the
