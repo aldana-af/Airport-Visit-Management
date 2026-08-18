@@ -63,4 +63,54 @@ public class VisitorController : Controller
 
         return RedirectToAction("Index");
     }
+
+    // editing visitor info
+
+    [Authorize(Roles = "Employee")]
+    [HttpGet]
+    public async Task<IActionResult> Edit(int id)
+    {
+        var visitor = await _context.Visitors.FirstOrDefaultAsync(v => v.VisitorID == id);
+        if (visitor == null) return NotFound();
+
+        ViewData["Role"] = "Employee";
+        ViewData["Title"] = "Edit Visitor";
+
+        var vm = new EditVisitorViewModel
+        {
+            VisitorID = visitor.VisitorID,
+            Name = visitor.Name,
+            Organization = visitor.Organization,
+            Position = visitor.Position,
+            Phone = visitor.Phone,
+            Email = visitor.Email
+        };
+        return View(vm);
+    }
+
+    [Authorize(Roles = "Employee")] // add Roles = "Manager"
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Edit(EditVisitorViewModel vm)
+    {
+        if (!ModelState.IsValid)
+        {
+            ViewData["Role"] = "Employee";
+            ViewData["Title"] = "Edit Visitor";
+            return View(vm);
+        }
+
+        var visitor = await _context.Visitors.FirstOrDefaultAsync(v => v.VisitorID == vm.VisitorID);
+        if (visitor == null) return NotFound();
+
+        visitor.Name = vm.Name;
+        visitor.Organization = vm.Organization;
+        visitor.Position = vm.Position;
+        visitor.Phone = vm.Phone;
+        visitor.Email = vm.Email;
+
+        await _context.SaveChangesAsync();
+
+        return RedirectToAction("Index");
+    }
 }

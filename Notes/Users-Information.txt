@@ -1,0 +1,20 @@
+ALL LOGINS
+
+--Employee ID--------Username---------------Password---------------Role----------
+
+ 1001		| afelemban		|     aldana1104	|  Admin / Manager
+ 1002		| rfelemban		|     rose0715		|  Employee
+ 1005		| lfelemban		|     layan2308		|  Employee
+ 1006		|ofelemban		|     omar0402		|  Manager / Employee
+ 1007		| mfelemban		|     mohammed2025	|  Employee
+ 1009		| mgoutah		|     	?????		|  Employee
+ 1010		|jodoe			|     john0198		|  Employee
+ 1011		|salqahtani		|     sara0123		|  Employee
+ 1012		|ybahaziq		|     yousef0123	|  Employee
+ 1013		|nalharbi		|     noura0123		|  Employee
+ 1014		|kalotaibi		|     khalid0123	|  Employee
+ 1015		|faldosari		|     faisal0123	|  Employee
+ 1016		|ralzahrani		|     reem0123		|  Employee
+ 1017		|msamman		|     majed0123		|  Employee
+ 1018		|rjameel		|     rayan0123		|  Manager / Employee
+ 1019		|hbardeesi		|     hana0123		|  Manager / Employee

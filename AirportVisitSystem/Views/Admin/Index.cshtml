@@ -1,0 +1,38 @@
+﻿@model AdminHomeViewModel
+@{
+    Layout = "_AppLayout";
+}
+
+<div class="module-header">
+    <h2>Employee Hosts</h2>
+    <a class="btn btn-primary" asp-action="RegisterEmployeeHost">Register Employee Host</a>
+</div>
+<table class="data-table">
+    <thead><tr><th>Employee ID</th><th>Name</th></tr></thead>
+    <tbody>
+        @foreach (var host in Model.Hosts)
+        {
+            <tr>
+                <td>@host.Id</td>
+                <td>@host.Name</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="module-header" style="margin-top: 28px;">
+    <h2>Site Visiting Managers</h2>
+    <a class="btn btn-primary" asp-action="RegisterManager">Register Manager</a>
+</div>
+<table class="data-table">
+    <thead><tr><th>Manager ID</th><th>Name</th></tr></thead>
+    <tbody>
+        @foreach (var manager in Model.Managers)
+        {
+            <tr>
+                <td>@manager.Id</td>
+                <td>@manager.Name</td>
+            </tr>
+        }
+    </tbody>
+</table>

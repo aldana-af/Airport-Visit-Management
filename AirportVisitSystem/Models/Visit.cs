@@ -13,6 +13,7 @@
         public int HostEmployeeID { get; set; }
 
         public string VisitStatus { get; set; }
+        public string Status { get; set; }
 
         public DateTime CreatedDate { get; set; }
 

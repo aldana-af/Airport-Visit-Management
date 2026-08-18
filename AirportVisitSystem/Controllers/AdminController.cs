@@ -3,7 +3,9 @@ using AirportVisitSystem.Models;
 using AirportVisitSystem.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace AirportVisitSystem.Controllers
@@ -29,10 +31,47 @@ namespace AirportVisitSystem.Controllers
             _employeeFormApiClient = employeeFormApiClient;
         }
 
+        //
+
+        [HttpGet]
+        public async Task<IActionResult> Index()
+        {
+            ViewData["Title"] = "Admin Home";
+            ViewData["Role"] = "Admin";
+            ViewData["Greeting"] = $"Welcome, {User.FindFirstValue(ClaimTypes.GivenName)}";
+
+            var hosts = await _context.EmployeeHosts.ToListAsync();
+            var hostRows = new List<AdminRosterRow>();
+            foreach (var host in hosts)
+            {
+                var profile = await _employeeFormApiClient.LookupByEmployeeIdAsync(host.EmployeeID.ToString());
+                hostRows.Add(new AdminRosterRow
+                {
+                    Id = host.EmployeeID,
+                    Name = profile?.Name ?? "(not found in EmployeeForm)"
+                });
+            }
+
+            var managers = await _context.SiteVisitingManagers.ToListAsync();
+            var managerRows = new List<AdminRosterRow>();
+            foreach (var manager in managers)
+            {
+                var profile = await _employeeFormApiClient.LookupByEmployeeIdAsync(manager.ManagerID.ToString());
+                managerRows.Add(new AdminRosterRow
+                {
+                    Id = manager.ManagerID,
+                    Name = profile?.Name ?? "(not found in EmployeeForm)"
+                });
+            }
+
+            return View(new AdminHomeViewModel { Hosts = hostRows, Managers = managerRows });
+        }
+
         // GET: /Admin/RegisterEmployeeHost
         public IActionResult RegisterEmployeeHost()
         {
             ViewBag.Departments = _context.Departments.ToList();
+            ViewData["Role"] = "Admin";
             return View(new RegisterEmployeeHostViewModel());
         }
 
@@ -41,6 +80,7 @@ namespace AirportVisitSystem.Controllers
         public async Task<IActionResult> RegisterEmployeeHost(RegisterEmployeeHostViewModel model)
         {
             ViewBag.Departments = _context.Departments.ToList();
+            ViewData["Role"] = "Admin";
 
             if (string.IsNullOrWhiteSpace(model.Username) && string.IsNullOrWhiteSpace(model.EmployeeId))
             {
@@ -109,6 +149,7 @@ namespace AirportVisitSystem.Controllers
         // GET: /Admin/RegisterManager
         public IActionResult RegisterManager()
         {
+            ViewData["Role"] = "Admin";
             return View(new RegisterManagerViewModel());
         }
 
@@ -116,6 +157,8 @@ namespace AirportVisitSystem.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RegisterManager(RegisterManagerViewModel model)
         {
+            ViewData["Role"] = "Admin";
+
             if (string.IsNullOrWhiteSpace(model.Username) && string.IsNullOrWhiteSpace(model.EmployeeId))
             {
                 ModelState.AddModelError("", "Enter either a username or an employee ID to look up the employee.");
@@ -139,13 +182,21 @@ namespace AirportVisitSystem.Controllers
                 return View(model);
             }
 
-            // fix 
-            int nextManagerId = _context.SiteVisitingManagers.Any()
-                ? _context.SiteVisitingManagers.Max(m => m.ManagerID) + 1: 1;
+            if (!int.TryParse(profile.EmployeeId, out int employeeId))
+            {
+                ModelState.AddModelError("", $"EmployeeForm's employee ID for {profile.Name} ('{profile.EmployeeId}') isn't a valid number and can't be used as the AVS record ID.");
+                return View(model);
+            }
+
+            if (_context.SiteVisitingManagers.Any(m => m.ManagerID == employeeId))
+            {
+                ModelState.AddModelError("", $"A Manager record already exists with ID {employeeId}, but for a different person. This ID can't be reused.");
+                return View(model);
+            }
 
             var manager = new SiteVisitingManager
             {
-                ManagerID = nextManagerId,
+                ManagerID = employeeId,
                 EmployeeFormUserId = profile.Id
             };
 

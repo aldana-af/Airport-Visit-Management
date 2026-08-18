@@ -21,7 +21,7 @@ public class HomeController : Controller
         int employeeFormUserId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
         var employee = _context.EmployeeHosts.First(e => e.EmployeeFormUserId == employeeFormUserId);
 
-        ViewData["Greeting"] = $"Welcome, {employee.Name}";
+        ViewData["Greeting"] = $"Welcome, {User.FindFirstValue(ClaimTypes.GivenName)}";
         ViewData["Role"] = "Employee";
 
         var todaysVisits = await _context.Visits
@@ -66,7 +66,7 @@ public class HomeController : Controller
         int employeeFormUserId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
         var manager = _context.SiteVisitingManagers.First(m => m.EmployeeFormUserId == employeeFormUserId);
 
-        ViewData["Greeting"] = $"Welcome, {manager.Name}";
+        ViewData["Greeting"] = $"Welcome, {User.FindFirstValue(ClaimTypes.GivenName)}";
         ViewData["Role"] = "Manager";
 
         var upcomingVisits = await _context.Visits

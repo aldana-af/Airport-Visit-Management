@@ -33,6 +33,7 @@ public class VisitController : Controller
         return View(visits);
     }
 
+    //----------------------------------CREATE-------------------------------------------------------------------
     [Authorize(Roles = "Employee")]
     [HttpGet]
     public async Task<IActionResult> Create()
@@ -82,6 +83,7 @@ public class VisitController : Controller
             HostEmployeeID = employee.EmployeeID,
             VisitTypeID = vm.VisitTypeID,
             VisitStatus = "Pending",
+            Status = "Active",
             CreatedDate = DateTime.Now,
             VisitDate = vm.VisitDate,
             StartTime = vm.StartTime,
@@ -116,6 +118,122 @@ public class VisitController : Controller
         return RedirectToAction("Index");
     }
 
+    //-----------------------------------------EDIT---------------------------------------------------------------------
+    [Authorize(Roles = "Employee")]
+    [HttpGet]
+    public async Task<IActionResult> Edit(int id)
+    {
+        var visit = await _context.Visits.FirstOrDefaultAsync(v => v.VisitID == id);
+        if (visit == null) return NotFound();
+
+        int employeeFormUserId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+        var employee = _context.EmployeeHosts.First(e => e.EmployeeFormUserId == employeeFormUserId);
+
+        if (visit.HostEmployeeID != employee.EmployeeID) return Forbid();
+
+        if (visit.VisitStatus != "Pending" || visit.Status != "Active")
+        {
+            TempData["Error"] = "Only pending, active visits can be edited.";
+            return RedirectToAction("Details", new { id });
+        }
+
+        ViewData["Role"] = "Employee";
+        ViewData["Title"] = "Edit Visit";
+
+        var vm = new EditVisitViewModel
+        {
+            VisitID = visit.VisitID,
+            VisitTitle = visit.VisitTitle,
+            VisitDescription = visit.VisitDescription,
+            VisitTypeID = visit.VisitTypeID,
+            VisitDate = visit.VisitDate,
+            StartTime = visit.StartTime,
+            EndTime = visit.EndTime,
+            VisitTypes = await GetVisitTypeOptions()
+        };
+        return View(vm);
+    }
+
+    [Authorize(Roles = "Employee")]
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Edit(EditVisitViewModel vm)
+    {
+        var visit = await _context.Visits.FirstOrDefaultAsync(v => v.VisitID == vm.VisitID);
+        if (visit == null) return NotFound();
+
+        int employeeFormUserId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+        var employee = _context.EmployeeHosts.First(e => e.EmployeeFormUserId == employeeFormUserId);
+
+        if (visit.HostEmployeeID != employee.EmployeeID) return Forbid();
+
+        if (visit.VisitStatus != "Pending" || visit.Status != "Active")
+        {
+            TempData["Error"] = "Only pending, active visits can be edited.";
+            return RedirectToAction("Details", new { id = vm.VisitID });
+        }
+
+        if (vm.StartTime < new TimeSpan(9, 0, 0) || vm.EndTime > new TimeSpan(17, 0, 0))
+            ModelState.AddModelError("StartTime", "Visits can only be scheduled between 9 AM and 5 PM.");
+
+        if (vm.EndTime <= vm.StartTime)
+            ModelState.AddModelError("EndTime", "Visit end time must be after start time.");
+
+        if (!ModelState.IsValid)
+        {
+            ViewData["Role"] = "Employee";
+            ViewData["Title"] = "Edit Visit";
+            vm.VisitTypes = await GetVisitTypeOptions();
+            return View(vm);
+        }
+
+        visit.VisitTitle = vm.VisitTitle;
+        visit.VisitDescription = vm.VisitDescription;
+        visit.VisitTypeID = vm.VisitTypeID;
+        visit.VisitDate = vm.VisitDate;
+        visit.StartTime = vm.StartTime;
+        visit.EndTime = vm.EndTime;
+
+        await _context.SaveChangesAsync();
+        return RedirectToAction("Details", new { id = vm.VisitID });
+    }
+
+    //----------------------------------CANCEL-----------------------------------------------------------------------
+    [Authorize(Roles = "Employee")]
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Cancel(int id)
+    {
+        var visit = await _context.Visits.FirstOrDefaultAsync(v => v.VisitID == id);
+        if (visit == null) return NotFound();
+
+        int employeeFormUserId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+        var employee = _context.EmployeeHosts.First(e => e.EmployeeFormUserId == employeeFormUserId);
+
+        if (visit.HostEmployeeID != employee.EmployeeID) return Forbid();
+
+        if (visit.Status != "Active" || visit.VisitStatus == "Complete")
+        {
+            TempData["Error"] = "This visit can't be cancelled.";
+            return RedirectToAction("Details", new { id });
+        }
+
+        bool anyCheckedIn = await _context.VisitVisitors
+            .AnyAsync(vv => vv.VisitID == id && vv.CheckIn != null);
+        if (anyCheckedIn)
+        {
+            TempData["Error"] = "This visit has already started and can't be cancelled.";
+            return RedirectToAction("Details", new { id });
+        }
+
+        visit.Status = "Cancelled";
+        await _context.SaveChangesAsync();
+
+        TempData["Message"] = "Visit cancelled.";
+        return RedirectToAction("Details", new { id });
+    }
+
+    //--------------------------------------DETAILS----------------------------------------------------------------------
     [Authorize(Roles = "Employee,Manager")]
     public async Task<IActionResult> Details(int id)
     {
@@ -125,7 +243,31 @@ public class VisitController : Controller
         var visit = await _context.Visits.FirstOrDefaultAsync(v => v.VisitID == id);
         if (visit == null) return NotFound();
 
+        // for editing visit info
+        int employeeFormUserId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+        bool canEdit = false;
+        if (User.IsInRole("Employee"))
+        {
+            var currentEmployee = _context.EmployeeHosts.FirstOrDefault(e => e.EmployeeFormUserId == employeeFormUserId);
+            canEdit = currentEmployee != null
+                && visit.HostEmployeeID == currentEmployee.EmployeeID
+                && visit.VisitStatus == "Pending"
+                && visit.Status == "Active";
+        }
+
         var visitVisitors = await _context.VisitVisitors.Where(vv => vv.VisitID == id).ToListAsync();
+
+        bool canCancel = false;
+        if (User.IsInRole("Employee"))
+        {
+            var currentEmployee = _context.EmployeeHosts.FirstOrDefault(e => e.EmployeeFormUserId == employeeFormUserId);
+            canCancel = currentEmployee != null
+                && visit.HostEmployeeID == currentEmployee.EmployeeID
+                && visit.Status == "Active"
+                && visit.VisitStatus != "Complete"
+                && !visitVisitors.Any(vv => vv.CheckIn != null);
+        }
+
         var visitorIds = visitVisitors.Select(vv => vv.VisitorID).ToList();
         var visitors = await _context.Visitors.Where(v => visitorIds.Contains(v.VisitorID)).ToListAsync();
 
@@ -152,6 +294,8 @@ public class VisitController : Controller
             Host = await _context.EmployeeHosts.FirstAsync(e => e.EmployeeID == visit.HostEmployeeID),
             VisitType = await _context.VisitTypes.FirstAsync(t => t.VisitTypeID == visit.VisitTypeID),
             ManagerSignature = managerSignature, // new
+            CanEdit = canEdit,
+            CanCancel = canCancel,
 
             Visitors = visitVisitors.Select(vv => new VisitDetailsVisitorRow
             {

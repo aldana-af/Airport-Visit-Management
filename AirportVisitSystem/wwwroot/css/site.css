@@ -53,6 +53,8 @@ body {
     --color-badge-approved-text: #3B5A1E;
     --color-badge-rejected-bg: #F3D6D6;
     --color-badge-rejected-text: #8A2A2A;
+    --color-badge-cancelled-bg: #E0E0E0;
+    --color-badge-cancelled-text: #4A4A4A;
 }
 
 body {
@@ -253,6 +255,29 @@ a {
     color: var(--color-text-dark);
 }
 
+
+.badge-cancelled {
+    background: var(--color-badge-cancelled-bg);
+    color: var(--color-badge-cancelled-text);
+}
+
+/* Alerts */
+.alert {
+    padding: 10px 14px;
+    border-radius: 4px;
+    font-size: 13px;
+    margin-bottom: 16px;
+}
+
+.alert-success {
+    background: var(--color-badge-approved-bg);
+    color: var(--color-badge-approved-text);
+}
+
+.alert-danger {
+    background: var(--color-badge-rejected-bg);
+    color: var(--color-badge-rejected-text);
+}
 /* Forms */
 .form-group {
     margin-bottom: 16px;

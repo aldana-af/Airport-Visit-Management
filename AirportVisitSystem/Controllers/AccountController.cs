@@ -63,7 +63,8 @@ public class AccountController : Controller
             // match against EmployeeFormUserId too (already updated —
             // see ApprovalController, CheckInController, HomeController, VisitController).
             new Claim(ClaimTypes.NameIdentifier, employeeFormUserId.ToString()),
-            new Claim(ClaimTypes.Name, model.Username)
+            new Claim(ClaimTypes.Name, model.Username),
+            new Claim(ClaimTypes.GivenName, authResult.Name)
         };
         if (isEmployee) claims.Add(new Claim(ClaimTypes.Role, "Employee"));
         if (isManager) claims.Add(new Claim(ClaimTypes.Role, "Manager"));
@@ -79,7 +80,7 @@ public class AccountController : Controller
         if (roleCount > 1) return RedirectToAction("ChoosePortal");
         if (isManager) return RedirectToAction("Index", "Approval", new { area = "Manager" });
         if (isEmployee) return RedirectToAction("Index", "Visit", new { area = "Employee" });
-        if (isAdmin) return RedirectToAction("RegisterEmployeeHost", "Admin");
+        if (isAdmin) return RedirectToAction("Index", "Admin");
 
         ModelState.AddModelError("", "This EmployeeForm account isn't linked to an Employee, Manager, or Admin record in Airport yet.");
         return View(model);

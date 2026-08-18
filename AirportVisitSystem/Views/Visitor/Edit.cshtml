@@ -1,0 +1,35 @@
+﻿@model EditVisitorViewModel
+@{
+    Layout = "_AppLayout";
+}
+
+<h2>Edit visitor</h2>
+
+<form asp-action="Edit" method="post">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <input type="hidden" asp-for="VisitorID" />
+
+    <div class="form-group">
+        <label asp-for="Name"></label>
+        <input asp-for="Name" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Organization"></label>
+        <input asp-for="Organization" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Position"></label>
+        <input asp-for="Position" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Phone"></label>
+        <input asp-for="Phone" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Email"></label>
+        <input asp-for="Email" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save changes</button>
+    <a asp-action="Index" asp-controller="Visitor" class="btn btn-secondary">Cancel</a>
+</form>

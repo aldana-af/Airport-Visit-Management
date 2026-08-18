@@ -1,0 +1,11 @@
+How to use it
+
+Flip "UseMock": true whenever you want to work on Airport features without EmployeeForm running at all —
+ login with mockemployee1 / mockmanager1 / mockadmin1 (any password works in mock mode), 
+instant response, zero timeout risk. Flip it back to false when you actually need to test
+ the real integration.
+
+One safety note: this only ever activates if you explicitly set it — default is false, 
+and mock mode accepts any password for known usernames, so never leave it true if this 
+were ever deployed anywhere real. For your lab project that's a non-issue, 
+just flagging the reasoning.

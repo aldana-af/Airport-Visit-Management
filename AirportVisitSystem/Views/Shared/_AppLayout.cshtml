@@ -32,6 +32,11 @@
                 <a asp-controller="Visit" asp-action="Index" class="@(currentController == "Visit" ? "active" : "")">Visits</a>
                 <a asp-controller="Approval" asp-action="Index" class="@(currentController == "Approval" ? "active" : "")">Approvals</a>
             }
+            else if (ViewData["Role"] as string == "Admin")
+            {
+                <a asp-controller="Admin" asp-action="Index" class="@(currentController == "Admin" ? "active" : "")">Home</a>
+                <a asp-controller="Account" asp-action="ChoosePortal">Switch Portal</a>
+            }
         </nav>
 
         <main class="content">

@@ -24,7 +24,13 @@
             <tr>
                 <td>@visit.VisitTitle</td>
                 <td>@visit.VisitDate.ToShortDateString()</td>
-                <td><span class="badge badge-@visit.VisitStatus.ToLower()">@visit.VisitStatus</span></td>
+                <td>
+                    <span class="badge badge-@visit.VisitStatus.ToLower()">@visit.VisitStatus</span>
+                    @if (visit.Status == "Cancelled")
+                    {
+                        <span class="badge badge-cancelled">Cancelled</span>
+                    }
+                </td>
                 <td><a asp-action="Details" asp-route-id="@visit.VisitID">View details</a></td>
             </tr>
         }

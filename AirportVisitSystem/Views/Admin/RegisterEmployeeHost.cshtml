@@ -1,6 +1,7 @@
 ﻿@model AirportVisitSystem.Models.RegisterEmployeeHostViewModel
 @{
     ViewData["Title"] = "Register Employee";
+    Layout = "_AppLayout";
 }
 
 <h2>Register a new EmployeeHost</h2>
@@ -36,4 +37,5 @@
     </div>
 
     <button type="submit" class="btn btn-primary">Register</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
 </form>

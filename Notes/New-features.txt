@@ -1,0 +1,48 @@
+I want to add more features to the systems. Lets begin with the AVS first, but keep in mind what i told you about EFS.
+These features will likely be independant for each system.
+Features to implement in Airport Visit System
+1. The ability to edit a Visit's details after its created.
+2. The ability to edit a Visitors information after they've been added.
+3. Avoiding redundency in Visitors (check if visitor already exists before adding them)
+4. Give Admins in AVS a Home page with greeting after they choose Admin portal.
+	4.1 Admin homepage will have separate lists of Employee Hosts and Site Visiting Manager that are registered.
+	4.2 Above each list will be the 'Register Employee Host' and 'Register Manager' buttons.
+	4.3 The registration pages will have a cancel button that takes them to home page.
+5. Admin will have a switch portal button to take them to choose portal page if they want to login as manager.
+6. (suggest other features that are not too complicated to implement)
+
+Features to implement in EmployeeForm System
+1. Users and Admins have Profile module that has all their information. And they can edit their own password. (perhaps can edit other information later)
+2. (suggest other features that are not too complicated to implement)
+
+re
+1. we have a VisitStatus field that tracks approval status, so we can add a new one called Status as you said.
+2.Visitor IDs will not be editable after creation as they are set automatically. the same goes for Visit ID's.
+3. lets keep this feature off to the side for now.
+4. good
+5. yes use the same cookie-auth scheme
+6. we have checkin.out times for each visit already. we have search filter but it only searches bu visit title, so it can be improved to search using other fields. add cancel visit. add dashboard counts. also make admin views match the rest of the system.
+we will deal with EFS features later.
+
+EFS Features
+
+1. Profile module
+
+A ProfileController reading the current logged-in user's own record (via claims/identity, not a route parameter — don't let a user pass someone else's ID)
+Read-only display of their info, plus a separate ChangePasswordViewModel (CurrentPassword, NewPassword, ConfirmPassword)
+Verify current password with PasswordHasher<T>.VerifyHashedPassword before allowing the change — and re-check your password column width note from before, since this is exactly where a truncated hash would bite you
+
+2. Other feature suggestions (low complexity)
+
+Active/Inactive status on employees instead of hard delete — important since AVS depends on EFS records; deleting an employee EFS-side could orphan AVS data referencing that EmployeeId
+Failed-login lockout (basic counter + timeout) — meaningful since EFS is becoming your identity source of truth
+Admin employee search/filter (by name, department, role)
+Basic audit log on identity changes (who changed what, when) — flag this as a "nice to have," it's more involved than the others if you want it done properly
+
+FIX
+1. admin portal UI make it centered like similarly to Login page
+2. when registering new employeehost or manager it works but does not take back to admin home page
+3. add delete employeehost and manager actions and buttons for admin
+3. managers can create and edit visits and visitors as well?
+4. manager switch to admin portal if they are both
+5. can cancel visits that were approved also, not only pending visits

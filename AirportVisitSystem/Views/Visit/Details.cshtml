@@ -5,6 +5,27 @@
 
 <a asp-action="Index" asp-controller="Visit" class="btn btn-secondary">Back</a>
 
+@if (Model.CanEdit)
+{
+    <a asp-action="Edit" asp-route-id="@Model.Visit.VisitID" class="btn btn-primary">Edit visit</a>
+}
+
+@if (Model.CanCancel)
+{
+    <form asp-action="Cancel" asp-route-id="@Model.Visit.VisitID" method="post" style="display:inline;" onsubmit="return confirm('Cancel this visit? This cannot be undone.');">
+        <button type="submit" class="btn btn-danger">Cancel visit</button>
+    </form>
+}
+
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-success">@TempData["Message"]</div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
 <h2>@Model.Visit.VisitTitle</h2>
 <p style="color: var(--color-text-muted); font-size: 14px;">@Model.Visit.VisitDescription</p>
 
@@ -18,7 +39,14 @@
 <div style="display: flex; gap: 28px; margin: 18px 0; font-size: 13px;">
 <div><span style="color: var(--color-text-faint);">Date</span><br /><span>@Model.Visit.VisitDate.ToShortDateString()</span></div>
 <div><span style="color: var(--color-text-faint);">Time</span><br /><span>@Model.Visit.StartTime – @Model.Visit.EndTime</span></div>
-<div><span style="color: var(--color-text-faint);">Status</span><br /><span class="badge badge-@Model.Visit.VisitStatus.ToLower()">@Model.Visit.VisitStatus</span></div>
+    <div>
+        <span style="color: var(--color-text-faint);">Status</span><br />
+        <span class="badge badge-@Model.Visit.VisitStatus.ToLower()">@Model.Visit.VisitStatus</span>
+        @if (Model.Visit.Status == "Cancelled")
+        {
+            <span class="badge badge-cancelled">Cancelled</span>
+        }
+    </div>
 </div>
 
 <h3 style="font-size: 15px; margin: 20px 0 10px;">Visitors</h3>

@@ -1,6 +1,7 @@
 ﻿@model AirportVisitSystem.Models.RegisterManagerViewModel
 @{
     ViewData["Title"] = "Register Manager";
+    Layout = "_AppLayout";
 }
 
 <h2>Register a new Site Visiting Manager</h2>
@@ -25,4 +26,5 @@
     </div>
 
     <button type="submit" class="btn btn-primary">Register</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
 </form>

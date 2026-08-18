@@ -1,0 +1,41 @@
+﻿@model EditVisitViewModel
+@{
+    Layout = "_AppLayout";
+}
+
+<h2>Edit visit</h2>
+
+<form asp-action="Edit" method="post">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <input type="hidden" asp-for="VisitID" />
+
+    <div class="form-group">
+        <label asp-for="VisitTitle"></label>
+        <input asp-for="VisitTitle" />
+    </div>
+    <div class="form-group">
+        <label asp-for="VisitDescription"></label>
+        <textarea asp-for="VisitDescription"></textarea>
+    </div>
+    <div class="form-group">
+        <label asp-for="VisitTypeID"></label>
+        <select asp-for="VisitTypeID" asp-items="Model.VisitTypes">
+            <option value="">-- Select type --</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label asp-for="VisitDate"></label>
+        <input asp-for="VisitDate" type="date" />
+    </div>
+    <div class="form-group">
+        <label asp-for="StartTime"></label>
+        <input asp-for="StartTime" type="time" />
+    </div>
+    <div class="form-group">
+        <label asp-for="EndTime"></label>
+        <input asp-for="EndTime" type="time" />
+    </div>
+
+    <a asp-action="Details" asp-route-id="@Model.VisitID" class="btn btn-secondary">Cancel</a>
+    <button type="submit" class="btn btn-primary">Save changes</button>
+</form>

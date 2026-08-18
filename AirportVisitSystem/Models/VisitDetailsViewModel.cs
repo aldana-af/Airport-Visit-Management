@@ -7,6 +7,8 @@
         public EmployeeHost Host { get; set; }
         public VisitType VisitType { get; set; }
         public string ManagerSignature { get; set; }
+        public bool CanEdit { get; set; }
+        public bool CanCancel { get; set; }
         public List<VisitDetailsVisitorRow> Visitors { get; set; }
     }
 }
