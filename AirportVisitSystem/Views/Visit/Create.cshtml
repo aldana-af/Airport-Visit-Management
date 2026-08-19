@@ -24,6 +24,15 @@
                 <option value="">-- Select type --</option>
             </select>
         </div>
+        @if (ViewData["Role"] as string == "Manager")
+        {
+            <div class="form-group">
+                <label asp-for="HostEmployeeID">Employee Host</label>
+                <select asp-for="HostEmployeeID" asp-items="Model.Hosts">
+                    <option value="">-- Select host --</option>
+                </select>
+            </div>
+        }
         <a asp-action="Index" asp-controller="Visit" class="btn btn-secondary">Cancel</a>
         <button type="button" class="btn btn-primary btn-next">Next</button>
         

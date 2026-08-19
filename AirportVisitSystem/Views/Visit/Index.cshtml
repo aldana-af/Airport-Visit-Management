@@ -4,7 +4,7 @@
 }
 
 <div class="module-header">
-    @if (ViewData["Role"] as string == "Employee")
+    @if (ViewData["Role"] as string == "Employee" || ViewData["Role"] as string == "Manager")
     {
         <a class="btn btn-primary" asp-action="Create">+ Request visit</a>
     }

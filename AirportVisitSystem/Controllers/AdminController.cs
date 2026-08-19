@@ -38,7 +38,7 @@ namespace AirportVisitSystem.Controllers
         {
             ViewData["Title"] = "Admin Home";
             ViewData["Role"] = "Admin";
-            ViewData["Greeting"] = $"Welcome, {User.FindFirstValue(ClaimTypes.GivenName)}";
+            //ViewData["Greeting"] = $"Welcome, {User.FindFirstValue(ClaimTypes.GivenName)}";
 
             var hosts = await _context.EmployeeHosts.ToListAsync();
             var hostRows = new List<AdminRosterRow>();
@@ -143,7 +143,7 @@ namespace AirportVisitSystem.Controllers
             await _context.SaveChangesAsync();
 
             TempData["Message"] = $"{profile.Name} was registered as an EmployeeHost.";
-            return RedirectToAction("RegisterEmployeeHost");
+            return RedirectToAction("Index");
         }
 
         // GET: /Admin/RegisterManager
@@ -204,7 +204,75 @@ namespace AirportVisitSystem.Controllers
             await _context.SaveChangesAsync();
 
             TempData["Message"] = $"{profile.Name} was registered as a Manager.";
-            return RedirectToAction("RegisterManager");
+            return RedirectToAction("Index");
+        }
+
+        // deleting
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteEmployeeHost(int id)
+        {
+            var host = await _context.EmployeeHosts.FirstOrDefaultAsync(e => e.EmployeeID == id);
+            if (host == null) return NotFound();
+
+            bool hasVisits = await _context.Visits.AnyAsync(v => v.HostEmployeeID == id);
+            if (hasVisits)
+            {
+                TempData["Error"] = "This Employee Host has visits on record and can't be deleted.";
+                return RedirectToAction("Index");
+            }
+
+            int? loginId = host.LoginID;
+
+            _context.EmployeeHosts.Remove(host);
+            await _context.SaveChangesAsync();
+
+            if (loginId.HasValue)
+            {
+                var login = await _context.Logins.FirstOrDefaultAsync(l => l.LoginID == loginId);
+                if (login != null)
+                {
+                    _context.Logins.Remove(login);
+                    await _context.SaveChangesAsync();
+                }
+            }
+
+            TempData["Message"] = "Employee Host removed.";
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteManager(int id)
+        {
+            var manager = await _context.SiteVisitingManagers.FirstOrDefaultAsync(m => m.ManagerID == id);
+            if (manager == null) return NotFound();
+
+            bool hasApprovals = await _context.Approvals.AnyAsync(a => a.ApprovingManagerID == id);
+            if (hasApprovals)
+            {
+                TempData["Error"] = "This Manager has approval records on file and can't be deleted.";
+                return RedirectToAction("Index");
+            }
+
+            int? loginId = manager.ManagerLoginID;
+
+            _context.SiteVisitingManagers.Remove(manager);
+            await _context.SaveChangesAsync();
+
+            if (loginId.HasValue)
+            {
+                var login = await _context.Logins.FirstOrDefaultAsync(l => l.LoginID == loginId);
+                if (login != null)
+                {
+                    _context.Logins.Remove(login);
+                    await _context.SaveChangesAsync();
+                }
+            }
+
+            TempData["Message"] = "Manager removed.";
+            return RedirectToAction("Index");
         }
     }
 }

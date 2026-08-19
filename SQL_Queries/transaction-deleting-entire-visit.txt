@@ -1,0 +1,54 @@
+Good approach — do the raw SQL cleanup for Visits (since there's no Delete-Visit feature, 
+only Cancel, and that data has real FK children), then use the Admin Delete buttons we 
+already built for the Employee Hosts and Managers themselves — that action already checks
+for exactly this and will simply succeed once the dependent rows are gone.
+
+Dependency order
+From the schema:
+Approval        → SiteVisitingManager, EmployeeHost, VisitVisitor
+VisitVisitor     → Visit, Visitor, Badge
+Visit             → EmployeeHost, Department, VisitType
+EmployeeHost     → Department, Logins
+SiteVisitingManager → Logins
+
+So for a full reset of a Visit, delete child-to-parent: Approval → VisitVisitor → Visit. 
+Once that's done, EmployeeHost/SiteVisitingManager rows with no remaining
+ Visits/Approvals can go through the app's Delete button.
+
+SQL — run against each LocalDB you want to reset
+
+BEGIN TRAN;
+
+-- 1) List the VisitIDs you want to wipe
+DECLARE @VisitIDs TABLE (VisitID INT);
+INSERT INTO @VisitIDs (VisitID) VALUES (1), (2), (3); -- replace with your actual VisitIDs
+
+-- 2) Delete Approval rows tied to those visits (via VisitVisitor)
+DELETE a
+FROM Approval a
+INNER JOIN VisitVisitor vv ON vv.VisitVisitorID = a.VisitVisitorID
+WHERE vv.VisitID IN (SELECT VisitID FROM @VisitIDs);
+
+-- 3) Delete VisitVisitor rows tied to those visits
+DELETE FROM VisitVisitor
+WHERE VisitID IN (SELECT VisitID FROM @VisitIDs);
+
+-- 4) Delete the Visit rows themselves
+DELETE FROM Visit
+WHERE VisitID IN (SELECT VisitID FROM @VisitIDs);
+
+-- sanity check before committing
+SELECT * FROM Approval;
+SELECT * FROM VisitVisitor;
+SELECT * FROM Visit;
+
+-- if everything looks right:
+COMMIT TRAN;
+-- if not:
+-- ROLLBACK TRAN;
+
+If it's easier to target by name than by ID, swap step 1 for something like:
+
+DECLARE @VisitIDs TABLE (VisitID INT);
+INSERT INTO @VisitIDs (VisitID)
+SELECT VisitID FROM Visit WHERE VisitTitle LIKE 'test%'; -- adjust pattern to match your test data

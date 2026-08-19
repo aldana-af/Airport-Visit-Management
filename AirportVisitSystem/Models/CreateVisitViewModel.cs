@@ -34,5 +34,10 @@ namespace AirportVisitSystem.Models
         [Required]
         [DataType(DataType.Time)]
         public TimeSpan EndTime { get; set; }
+
+        public int? HostEmployeeID { get; set; }
+
+        [ValidateNever]
+        public IEnumerable<SelectListItem> Hosts { get; set; }
     }
 }

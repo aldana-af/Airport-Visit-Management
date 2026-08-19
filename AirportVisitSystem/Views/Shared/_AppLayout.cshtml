@@ -8,7 +8,7 @@
 </head>
 <body>
     <div class="topbar">
-        <span class="greeting">@ViewData["Greeting"]</span>
+        <span class="greeting">Welcome, @User.FindFirst(ClaimTypes.GivenName)?.Value</span>
         <form asp-controller="Account" asp-action="Logout" method="post">
             <button type="submit" class="btn-logout">Logout</button>
         </form>
@@ -31,6 +31,7 @@
                 <a asp-controller="Visitor" asp-action="Index" class="@(currentController == "Visitor" ? "active" : "")">Visitors</a>
                 <a asp-controller="Visit" asp-action="Index" class="@(currentController == "Visit" ? "active" : "")">Visits</a>
                 <a asp-controller="Approval" asp-action="Index" class="@(currentController == "Approval" ? "active" : "")">Approvals</a>
+                <a asp-controller="Account" asp-action="ChoosePortal">Switch Portal</a>
             }
             else if (ViewData["Role"] as string == "Admin")
             {

@@ -4,7 +4,7 @@
 }
 
 <div class="module-header">
-    @if (ViewData["Role"] as string == "Employee")
+    @if (ViewData["Role"] as string == "Employee" || ViewData["Role"] as string == "Manager")
     {
         <a class="btn btn-primary" asp-action="Create">+ Add visitor</a>
     }
@@ -28,7 +28,7 @@
                 <td>@visitor.Phone</td>
                 <td>@visitor.Email</td>
                 <td>
-                    @if (ViewData["Role"] as string == "Employee")
+                    @if (ViewData["Role"] as string == "Employee" || ViewData["Role"] as string == "Manager")
                     {
                         <a asp-action="Edit" asp-route-id="@visitor.VisitorID">Edit</a>
                     }

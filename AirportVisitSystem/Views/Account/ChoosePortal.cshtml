@@ -1,27 +1,48 @@
 ﻿@{
     ViewData["Title"] = "Choose Portal";
+    Layout = null;
 }
 
-<div class="choose-portal-container">
-    <h2>You have access to multiple portals</h2>
-    <p>Which would you like to enter?</p>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewData["Title"] - Airport Visitor Management</title>
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="login-page">
+        <div class="login-card">
+            <div class="login-brand">
+                <div class="login-brand-icon">&#9992;</div>
+                <p class="login-brand-name">Airport visit management</p>
+            </div>
+            <p class="login-subtitle">You have access to multiple portals. Which would you like to enter?</p>
 
-    @if (User.IsInRole("Employee"))
-    {
-        <a class="btn btn-primary" asp-area="Employee" asp-controller="Visit" asp-action="Index">
-            Employee Portal
-        </a>
-    }
-    @if (User.IsInRole("Manager"))
-    {
-        <a class="btn btn-primary" asp-area="Manager" asp-controller="Approval" asp-action="Index">
-            Manager Portal
-        </a>
-    }
-    @if (User.IsInRole("Admin"))
-    {
-        <a class="btn btn-primary" asp-controller="Admin" asp-action="Index">
-            Admin Portal
-        </a>
-    }
-</div>
+            <div class="portal-choice-list">
+                @if (User.IsInRole("Employee"))
+                {
+                    <a class="btn btn-primary" asp-area="Employee" asp-controller="Visit" asp-action="Index">
+                        Employee Portal
+                    </a>
+                }
+                @if (User.IsInRole("Manager"))
+                {
+                    <a class="btn btn-primary" asp-area="Manager" asp-controller="Approval" asp-action="Index">
+                        Manager Portal
+                    </a>
+                }
+                @if (User.IsInRole("Admin"))
+                {
+                    <a class="btn btn-primary" asp-controller="Admin" asp-action="Index">
+                        Admin Portal
+                    </a>
+                }
+            </div>
+
+            <p class="login-footer">Contact your administrator if you need access</p>
+        </div>
+    </div>
+</body>
+</html>

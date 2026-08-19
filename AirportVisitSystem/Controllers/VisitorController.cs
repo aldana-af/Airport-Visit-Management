@@ -30,7 +30,9 @@ public class VisitorController : Controller
         return View(visitors);
     }
 
-    [Authorize(Roles = "Employee")]
+    //-------------------------------------------CREATE----------------------------------------------------
+    // get
+    [Authorize(Roles = "Employee,Manager")]
     [HttpGet]
     public IActionResult Create()
     {
@@ -39,7 +41,8 @@ public class VisitorController : Controller
         return View(new CreateVisitorViewModel());
     }
 
-    [Authorize(Roles = "Employee")]
+    //post
+    [Authorize(Roles = "Employee,Manager")]
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(CreateVisitorViewModel vm)
@@ -64,9 +67,9 @@ public class VisitorController : Controller
         return RedirectToAction("Index");
     }
 
-    // editing visitor info
-
-    [Authorize(Roles = "Employee")]
+    //---------------------------------------------EDIT--------------------------------------------
+    // get
+    [Authorize(Roles = "Employee,Manager")]
     [HttpGet]
     public async Task<IActionResult> Edit(int id)
     {
@@ -88,7 +91,8 @@ public class VisitorController : Controller
         return View(vm);
     }
 
-    [Authorize(Roles = "Employee")] // add Roles = "Manager"
+    //post
+    [Authorize(Roles = "Employee,Manager")]
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(EditVisitorViewModel vm)
